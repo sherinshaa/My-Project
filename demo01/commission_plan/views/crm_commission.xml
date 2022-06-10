@@ -1,0 +1,71 @@
+<odoo>
+
+    <record id="crm_commission_action" model="ir.actions.act_window">
+        <field name="name">Commission Plan</field>
+        <field name="res_model">crm.commission</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <record id="crm_commission_views" model="ir.ui.view">
+        <field name="name">commission.plan.view</field>
+        <field name="model">crm.commission</field>
+        <field name="arch" type="xml">
+            <form string="Commission view">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="active"/>
+                            <field name="commission_type"/>
+                            <field name="straight" attrs="{'invisible':['|', ('commission_type', '!=', 'revenue_wise'), ('graduated', '=', True)]}"/>
+                            <field name="graduated" attrs="{'invisible':['|', ('commission_type', '!=', 'revenue_wise'), ('straight', '=', True)]}"/>
+                            <field name="straight_percentage" attrs="{'invisible':[('straight', '=', False)]}"/>
+                        </group>
+                        <group>
+                            <field name="from_date"/>
+                            <field name="to_date"/>
+                        </group>
+                    </group>
+                    <notebook attrs="{'invisible':[('commission_type', '!=', 'product_wise')]}">
+                        <page string="Commission Plan">
+                            <field name="productwise_commission_ids">
+                                <tree>
+                                    <field name="product_category_id"/>
+                                    <field name="product_id"/>
+                                    <field name="rate_percentage"/>
+                                    <field name="max_commission"/>
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
+                    <notebook attrs="{'invisible':[('graduated', '=', False)]}">
+                        <page string="Graduated Commission Plan">
+                            <field name="graduated_commission_ids">
+                                <tree>
+                                    <field name="graduation_no"/>
+                                    <field name="from_amount"/>
+                                    <field name="to_amount"/>
+                                    <field name="commission_percentage"/>
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="crm_commission_plan_tree_view" model="ir.ui.view">
+        <field name="name">commission.plan.tree</field>
+        <field name="model">crm.commission</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name"/>
+                <field name="commission_type"/>
+                <field name="from_date"/>
+                <field name="to_date"/>
+            </tree>
+        </field>
+    </record>
+
+</odoo>

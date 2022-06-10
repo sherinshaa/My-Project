@@ -1,0 +1,100 @@
+<odoo>
+    <record id="hospital_management_payment_action" model="ir.actions.act_window">
+        <field name="name">Fee Payment</field>
+        <field name="res_model">fee.payment</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <data>
+        <record id="seq_hospital_ref" model="ir.sequence">
+            <field name="name">payment.sequence</field>
+            <field name="code">fee.payment</field>
+            <field name="prefix">PAY%(year)s/%(month)s/0</field>
+            <field name="padding">5</field>
+        </record>
+    </data>
+
+    <record id="hospital_management_fee_payment" model="ir.ui.view">
+        <field name="name">fee.payment.form</field>
+        <field name="model">fee.payment</field>
+        <field name="arch" type="xml">
+            <form string="Fee Payment">
+                <header>
+                    <button name="button_payment_confirm" class="oe_highlight" states="draft" type="object"
+                            string="Confirm Payment"
+                            help="To confirm the payment"/>
+                    <field name="state" widget="statusbar" statusbar_visble="draft,posted"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" position="inside">
+                        <button class="oe_stat_button" type="object" name="payments"
+                                icon="fa-dollar" attrs="{'invisible':[('payment_count', '=', 0)]}">
+                            <field string="Payment" name="payment_count" widget="statinfo"/>
+                        </button>
+                    </div>
+                    <widget name="web_ribbon" text="Paid"
+                            attrs="{'invisible':[('payment_count', '=', 0)]}"/>
+                    <group>
+                        <h1>
+                            <field name="payment_ref"/>
+                        </h1>
+                        <br></br>
+                        <group>
+                            <field name="token_no" invisible="1"/>
+                            <field name="patient_card_id" options="{'no_create': True, 'no_create_edit':True}"/>
+                            <field name="patients_id"/>
+                        </group>
+                        <group>
+                            <field name="doctor_id" options="{'no_create': True, 'no_create_edit':True}"/>
+                            <field name="department_id"/>
+                            <field name="currency_id" invisible="1"/>
+                            <field name="fee" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                        </group>
+                    </group>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="message_ids"/>
+                    <field name="activity_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+    <record id="hospital_management_payment" model="ir.ui.view">
+        <field name="name">fee.payment.tree.view</field>
+        <field name="model">fee.payment</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="payment_ref"/>
+                <field name="patient_card_id"/>
+                <field name="patients_id"/>
+                <field name="doctor_id"/>
+                <field name="department_id"/>
+                <field name="fee"/>
+                <field name="state" widget="badge" decoration-info="state == 'draft'"
+                       decoration-success="state == 'posted'"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="hospital_management_payment_search" model="ir.ui.view">
+        <field name="name">fee.payment.search</field>
+        <field name="model">fee.payment</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="payment_ref"/>
+                <field name="patient_card_id"/>
+                <field name="patients_id"/>
+                <field name="doctor_id"/>
+                <field name="department_id"/>
+                <field name="fee"/>
+                <field name="state"/>
+                <filter string="Draft" name="state" domain="[('state', '=', 'draft')]"/>
+                <filter string="Posted" name="state" domain="[('state', '=', 'posted')]"/>
+                <filter string="Doctor" name="doctor_id" context="{'group_by': 'doctor_id'}"/>
+                <filter string="Department" name="department" context="{'group_by': 'department_id'}"/>
+                <filter string="State" name="state" context="{'group_by': 'state'}"/>
+            </search>
+        </field>
+    </record>
+</odoo>

@@ -1,0 +1,32 @@
+<odoo>
+
+    <record id="hospital_management_medicine_action" model="ir.actions.act_window">
+        <field name="name">Medicine</field>
+        <field name="res_model">hospital.medicine</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <record id="hospital_management_medicine_form_view" model="ir.ui.view">
+        <field name="name">medicine.form</field>
+        <field name="model">hospital.medicine</field>
+        <field name="arch" type="xml">
+            <form string="medicine">
+                <sheet>
+                    <group>
+                        <field name="medicine"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="hospital_management_medicine_tree_view" model="ir.ui.view">
+        <field name="name">medicine.tree</field>
+        <field name="model">hospital.medicine</field>
+        <field name="arch" type="xml">
+                <tree string="Medicine  ">
+                    <field name="medicine"/>
+                </tree>
+        </field>
+    </record>
+</odoo>

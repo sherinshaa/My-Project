@@ -1,0 +1,62 @@
+<odoo>
+<record id="property_type_action" model="ir.actions.act_window">
+    <field name="name">Property Type</field>
+    <field name="res_model">property.type</field>
+    <field name="view_mode">tree,form</field>
+</record>
+
+<record id="property_tag_action" model="ir.actions.act_window">
+        <field name="name">Property Tag</field>
+        <field name="res_model">property.tag</field>
+        <field name="view_mode">tree,form</field>
+</record>
+
+    <record id="estate_property_id" model="ir.ui.view">
+        <field name="name">property types</field>
+        <field name="model">property.type</field>
+        <field name="arch" type="xml">
+            <form string="Test">
+                    <sheet>
+                        <group>
+                                <field name="property"/>
+                        </group>
+                    </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="estate_property_type_view" model="ir.ui.view">
+        <field name="name">Property type</field>
+        <field name="model">property.type</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="property"/>
+            </tree>
+        </field>
+    </record>
+
+
+
+    <record id="estate_property_tag" model="ir.ui.view">
+        <field name="name">property Tags</field>
+        <field name="model">property.tag</field>
+        <field name="arch" type="xml">
+            <form string="Test">
+                    <sheet>
+                        <group>
+                                <field name="tags"/>
+                        </group>
+                    </sheet>
+            </form>
+        </field>
+    </record>
+    <record id="estate_property_type_tree" model="ir.ui.view">
+        <field name="name">Property Tags</field>
+        <field name="model">property.tag</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="tags"/>
+            </tree>
+        </field>
+    </record>
+</odoo>

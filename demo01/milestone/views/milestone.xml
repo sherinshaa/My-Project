@@ -1,0 +1,94 @@
+<odoo>
+    <record id="inherited_sale_order_line_views_id" model="ir.ui.view">
+        <field name="name">inherit.milestone.order.lines</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//button[@name='action_quotation_send']" position="after">
+                <button name="action_project" type="object" class="oe_stat_button" string="Create Project"
+                        attrs="{'invisible': [('project', '>', 0)]}"/>
+            </xpath>
+            <xpath expr="//button[@name='action_quotation_send']" position="after">
+                <button name="action_update_project" type="object" class="oe_stat_button" string="Update Project"
+                        attrs="{'invisible': [('project', '=', 0)]}"/>
+            </xpath>
+            <xpath expr="//form/sheet/div/button[@name='preview_sale_order']" position="before">
+                    <button name="project_smart" icon="fa-laptop" type="object" class="oe_stat_button"
+                            attrs="{'invisible': [('project', '=', 0)]}">
+                    <field name="project" string="Project" widget="statinfo"/>
+                    </button>
+            </xpath>
+            <xpath expr="//page/field[@name='order_line']/tree/field[@name='product_uom_qty']" position="after">
+                <field name="milestone"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="inherited_project_views" model="ir.ui.view">
+        <field name="name">inherit.project</field>
+        <field name="model">project.project</field>
+        <field name="inherit_id" ref="project.edit_project"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='user_id']" position="after">
+                <field name="ref_id"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="inherited_project_task_views" model="ir.ui.view">
+        <field name="name">inherit.project.task</field>
+        <field name="model">project.task</field>
+        <field name="inherit_id" ref="project.view_task_form2"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='user_ids']" position="after">
+                <field name="milestone"/>
+            </xpath>
+        </field>
+    </record>
+    <!--<button name="button_op" class="oe_highlight" states="draft" string="confirm" type="object"/>-->
+    <!--    <record id="sale_order_view_form" model="ir.ui.view">-->
+    <!--        <field name="name">sale.order.form.inherit.event.sale</field>-->
+    <!--        <field name="model">sale.order</field>-->
+    <!--        <field name="inherit_id" ref="sale.view_order_form" />-->
+    <!--        <field name="arch" type="xml">-->
+    <!--            <xpath expr="//button[@name='preview_sale_order']" position="before">-->
+    <!--                <button name="action_view_attendee_list" type="object"-->
+    <!--                        class="oe_stat_button" icon="fa-users" attrs="{'invisible': [('attendee_count', '=', 0)]}">-->
+    <!--                    <field name="attendee_count" widget="statinfo" string="Attendees"/>-->
+    <!--                </button>-->
+    <!--            </xpath>-->
+    <!--            <xpath expr="//field[@name='order_line']//form//field[@name='product_id']" position="after">-->
+    <!--                <field-->
+    <!--                    name="event_id"-->
+    <!--                    domain="[-->
+    <!--                        ('event_ticket_ids.product_id','=', product_id),-->
+    <!--                        ('date_end','&gt;=',time.strftime('%Y-%m-%d 00:00:00')),-->
+    <!--                        '|', ('company_id', '=', False), ('company_id', '=', parent.company_id)-->
+    <!--                    ]"-->
+    <!--                    attrs="{'invisible': [('event_ok', '=', False)], 'required': [('event_ok', '!=', False)]}"-->
+    <!--                    options="{'no_open': True, 'no_create': True}"-->
+    <!--                />-->
+    <!--                <field-->
+    <!--                    name="event_ticket_id"-->
+    <!--                    domain="[-->
+    <!--                        ('event_id', '=', event_id),-->
+    <!--                        ('product_id','=',product_id),-->
+    <!--                        '|', ('seats_limited', '=', False), ('seats_available', '>', 0), '|', ('company_id', '=', False), ('company_id', '=', parent.company_id)-->
+    <!--                    ]"-->
+    <!--                    attrs="{-->
+    <!--                        'invisible': ['|', ('event_ok', '=', False), ('event_id', '=', False)],-->
+    <!--                        'required': [('event_ok', '!=', False), ('event_id', '!=', False)],-->
+    <!--                    }"-->
+    <!--                    options="{'no_open': True, 'no_create': True}"-->
+    <!--                />-->
+    <!--                <field name="event_ok" invisible="1"/>-->
+    <!--            </xpath>-->
+    <!--            <xpath expr="//field[@name='order_line']//tree//field[@name='product_template_id']" position="after">-->
+    <!--                <field name="event_ok" invisible="1" />-->
+    <!--                <field name="event_id" optional="hide" domain="['|', ('company_id', '=', False), ('company_id', '=', parent.company_id)]"/>-->
+    <!--                <field name="event_ticket_id" optional="hide" domain="['|', ('company_id', '=', False), ('company_id', '=', parent.company_id)]"/>-->
+    <!--            </xpath>-->
+    <!--        </field>-->
+    <!--    </record>-->
+    <!--</odoo>-->
+</odoo>

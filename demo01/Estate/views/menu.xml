@@ -1,0 +1,12 @@
+<odoo>
+    <menuitem id="test_menu_root" name="Estate"/>
+    <menuitem id="test_properties_menu" name="Properties" parent="test_menu_root"/>
+    <menuitem id="test_model_menu_action" parent="test_properties_menu" action="test_model_action"/>
+       <!-- <menuitem id="test_setting_menu" name="Settings">
+        <menuitem id="test_model_menu_action" action="test_model_action"/>
+    </menuitem>-->
+    <menuitem id="test_property_setting" name="Settings" parent="test_menu_root"/>
+    <menuitem id="new_property_type_id" parent="test_property_setting" action="property_type_action"/>
+    <menuitem id="test_property_tag" name="Property Tags" parent="test_property_setting"/>
+    <menuitem id="new_property_tag"  action="property_tag_action" parent="test_property_tag"/>
+</odoo>

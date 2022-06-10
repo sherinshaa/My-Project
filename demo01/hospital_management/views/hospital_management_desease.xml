@@ -1,0 +1,31 @@
+<odoo>
+    <record id="hospital_management_disease_action" model="ir.actions.act_window">
+        <field name="name">Disease</field>
+        <field name="res_model">hospital.disease</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+    <record id="hospital_management_disease_form_view" model="ir.ui.view">
+        <field name="name">hospital.disease.form</field>
+        <field name="model">hospital.disease</field>
+        <field name="arch" type="xml">
+            <form string="disease">
+                <sheet>
+                    <group>
+                        <field name="disease"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="hospital_management_disease_tree" model="ir.ui.view">
+        <field name="name">hospital.disease.tree</field>
+        <field name="model">hospital.disease</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="disease"/>
+            </tree>
+        </field>
+    </record>
+
+</odoo>

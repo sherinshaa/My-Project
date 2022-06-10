@@ -1,0 +1,87 @@
+<odoo>
+
+    <record id="hospital_management_appointment_action" model="ir.actions.act_window">
+        <field name="name">Appointment</field>
+        <field name="res_model">hospital.appointment</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <record id="hospital_management_appointment_form_view" model="ir.ui.view">
+        <field name="name">hospital.appointment.form</field>
+        <field name="model">hospital.appointment</field>
+        <field name="arch" type="xml">
+            <form string="appointment">
+                <header>
+                    <button name="button_op" class="oe_highlight" states="draft" string="Create OP" type="object"
+                            help="Create Direct OP"/>
+                    <button name="button_appointment" class="oe_highlight" states="draft" string="Appointment"
+                            type="object"
+                            help="To Appointment"/>
+                    <button name="button_confirm" class="oe_highlight" states="appointment" string="Confirm"
+                            type="object" help="To confirm"/>
+                    <field name="state" widget="statusbar" statusbar_visble="draft,appointment,op"/>
+                </header>
+                <sheet>
+                    <group>
+                        <div class="oe_button_box" position="inside">
+                            <button class="oe_stat_button" type="object" name="smart_button" icon="fa-book"
+                                    attrs="{'invisible':[('appointment_count', '=', 0)]}">
+                                <field string="Appointments" name="appointment_count" widget="statinfo"/>
+                            </button>
+                        </div>
+                    </group>
+                    <group>
+                        <group>
+                            <field name="patient_card_id" options="{'no_create': True, 'no_create_edit':True}"/>
+                            <field name="patient_name"/>
+                            <field name="date"/>
+                        </group>
+                        <group>
+                            <field name="doctor_id" options="{'no_create': True, 'no_create_edit':True}"/>
+                            <field name="department_id"/>
+                        </group>
+                    </group>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <record id="hospital_management_appointment_tree_view" model="ir.ui.view">
+        <field name="name">hospital.appointment.tree</field>
+        <field name="model">hospital.appointment</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="patient_name"/>
+                <field name="date"/>
+                <field name="doctor_id"/>
+                <field name="department_id"/>
+                <field name="state" widget="badge" decoration-info="state=='draft'" decoration-primary="state=='appointment'" decoration-success="state=='op'"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="hospital_management_appointment_search" model="ir.ui.view">
+        <field name="name">hospital.appointment.search</field>
+        <field name="model">hospital.appointment</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="patient_name"/>
+                <field name="date"/>
+                <field name="doctor_id"/>
+                <field name="department_id"/>
+                <field name="state"/>
+                <filter string="Draft" name="state" domain="[('state', '=', 'draft')]"/>
+                <filter string="Appointment" name="state" domain="[('state', '=', 'appointment')]"/>
+                <filter string="OP" name="state" domain="[('state', '=', 'op')]"/>
+                <filter string="Doctor" name="doctor" context="{'group_by': 'doctor_id'}"/>
+                <filter string="Department" name="department" context="{'group_by': 'department_id'}"/>
+                <filter string="State" name="state" context="{'group_by': 'state'}"/>
+            </search>
+        </field>
+    </record>
+</odoo>

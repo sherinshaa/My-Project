@@ -1,0 +1,117 @@
+<odoo>
+    <record id="hospital_management_op_action" model="ir.actions.act_window">
+        <field name="name">Op Registration</field>
+        <field name="res_model">hospital.op</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <record id="hospital_management_op_form_view" model="ir.ui.view">
+        <field name="name">hospital.management.op.form</field>
+        <field name="model">hospital.op</field>
+        <field name="arch" type="xml">
+            <form string="hospital_op">
+                <header>
+                    <button name="button_op" class="oe_highlight" states="draft" string="confirm" type="object"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,op"/>
+                    <button name="button_payment" class="oe_highlight" states="op" string="Fee Payment" type="object"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" position="inside">
+                            <button class="oe_stat_button" type="object" name="payments"
+                                icon="fa-dollar" attrs="{'invisible':[('payment_count', '=', 0)]}">
+                            <field string="Payment" name="payment_count" widget="statinfo"/>
+                        </button>
+                    </div>
+<!--                    <widget name="web_ribbon" text="Paid"-->
+<!--                            attrs="{'invisible':[('payment_count', '=', 0)]}"/>-->
+                    <group>
+                        <h1>
+                            <field name="token_no"/>
+                        </h1>
+                        <br></br>
+                        <group>
+                            <field name="patient_card_id" options="{'no_create': True, 'no_create_edit':True}"/>
+                            <field name="patients_id"/>
+                            <field name="age"/>
+                            <field name="gender"/>
+                        </group>
+                        <group>
+                            <field name="doctor_id" options="{'no_create': True, 'no_create_edit':True}"/>
+                            <field name="date"/>
+                            <field name="currency_id" invisible="1"/>
+                            <field name="fee" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                            <field name="blood_group"/>
+                        </group>
+                    </group>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <record id="hospital_management_op_tree_view" model="ir.ui.view">
+        <field name="name">hospital.management.tree</field>
+        <field name="model">hospital.op</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="token_no"/>
+                <field name="patients_id"/>
+                <field name="date"/>
+                <field name="age"/>
+                <field name="gender"/>
+                <field name="doctor_id"/>
+                <field name="department_id"/>
+                <field name="blood_group"/>
+                <field name="state" widget="badge" decoration-info="state=='draft'" decoration-success="state=='op'"/>
+            </tree>
+        </field>
+    </record>
+    <record id="hospital_management_op_search" model="ir.ui.view">
+        <field name="name">hospital.op.search</field>
+        <field name="model">hospital.op</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="token_no"/>
+                <field name="patients_id"/>
+                <field name="date"/>
+                <field name="age"/>
+                <field name="gender"/>
+                <field name="doctor_id"/>
+                <field name="blood_group"/>
+                <field name="state"/>
+                <filter string="OP" name="state" domain="[('state', '=', 'op')]"/>
+                <filter string="Draft" name="state" domain="[('state', '=', 'draft')]"/>
+                <filter string="Gender" name="gender" context="{'group_by': 'gender'}"/>
+                <filter string="Doctor" name="doctor_id" context="{'group_by': 'doctor_id'}"/>
+                <filter string="Department" name="department" context="{'group_by': 'department_id'}"/>
+            </search>
+        </field>
+    </record>
+    <data>
+        <record id="seq_hospital_op" model="ir.sequence">
+            <field name="name">op.sequence</field>
+            <field name="code">hospital.op</field>
+            <field name="prefix">Token0</field>
+            <field name="padding">1</field>
+        </record>
+    </data>
+
+    <data noupdate="1">
+        <record id="ir_cron_scheduler_recurring_action" model="ir.cron">
+            <field name="name">Token Restart</field>
+            <field name="model_id" ref="model_hospital_op"/>
+            <field name="state">code</field>
+            <field name="code">model.action_done()</field>
+            <field name="active" eval="True"/>
+            <field name="user_id" ref="base.user_root"/>
+            <field name="interval_number">1</field>
+            <field name="interval_type">days</field>
+            <field name="numbercall">-1</field>
+        </record>
+    </data>
+
+</odoo>

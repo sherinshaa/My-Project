@@ -1,0 +1,6 @@
+<odoo>
+
+    <menuitem id="crm_commission_root_menu" name="Commission Plan">
+        <menuitem id="crm_commission_sub_menu" name="Commission Plan" action="crm_commission_action"/>
+    </menuitem>
+</odoo>

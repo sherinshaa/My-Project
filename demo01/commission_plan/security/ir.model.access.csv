@@ -1,0 +1,4 @@
+id,name,model_id/id,group_id/id,perm_read,perm_write,perm_create,perm_unlink
+access_crm_commission,access_crm_commission,model_crm_commission,base.group_user,1,1,1,1
+access_productwise_commission,access_productwise_commission,model_productwise_commission,base.group_user,1,1,1,1
+access_graduated_commission,access_graduated_commission,model_graduated_commission,base.group_user,1,1,1,1

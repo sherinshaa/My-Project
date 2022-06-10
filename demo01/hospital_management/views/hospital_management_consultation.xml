@@ -1,0 +1,83 @@
+<odoo>
+    <record id="hospital_management_consultation_action" model="ir.actions.act_window">
+        <field name="name">Consultation</field>
+        <field name="res_model">hospital.consultation</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <record id="hospital_management_consultation_form_view" model="ir.ui.view">
+        <field name="name">hospital.consultation.form</field>
+        <field name="model">hospital.consultation</field>
+        <field name="arch" type="xml">
+            <form string="consultations">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="patient_card_id" options="{'no_create': True, 'no_create_edit':True}"/>
+                            <field name="doctor_id" options="{'no_create': True, 'no_create_edit':True}"/>
+                            <field name="department_id"/>
+                            <field name="consultation"/>
+                        </group>
+                        <group>
+                            <field name="disease_id"/>
+                            <field name="date"/>
+                            <field name="diagnose"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Treatment">
+                            <field name="treatment_ids">
+                                <tree>
+                                    <field name="medicine_id"/>
+                                    <field name="day"/>
+                                    <field name="dose"/>
+                                    <field name="description"/>
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+                <group>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids"/>
+                        <field name="activity_ids"/>
+                        <field name="message_ids"/>
+                    </div>
+                </group>
+            </form>
+        </field>
+    </record>
+
+    <record id="hospital_management_consultation_tree" model="ir.ui.view">
+        <field name="name">hospital.consultation.tree</field>
+        <field name="model">hospital.consultation</field>
+        <field name="arch" type="xml">
+            <tree string="consultation">
+                <field name="patient_card_id"/>
+                <field name="consultation"/>
+                <field name="doctor_id"/>
+                <field name="department_id"/>
+                <field name="date"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="hospital_management_consultation_search" model="ir.ui.view">
+        <field name="name">hospital.consultation.search</field>
+        <field name="model">hospital.consultation</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="patient_card_id"/>
+                <field name="date"/>
+                <field name="consultation"/>
+                <field name="doctor_id"/>
+                <field name="department_id"/>
+                <filter string="IP" name="consultation" domain="[('consultation', '=', 'ip')]"/>
+                <filter string="OP" name="consultation" domain="[('consultation', '=', 'op')]"/>
+                <filter string="Doctor" name="doctor" context="{'group_by': 'doctor_id'}"/>
+                <filter string="Consultation Type" name="consultation_type" context="{'group_by': 'consultation'}"/>
+                <filter string="Department" name="department" context="{'group_by': 'department_id'}"/>
+            </search>
+        </field>
+    </record>
+</odoo>

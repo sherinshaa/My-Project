@@ -1,0 +1,18 @@
+<odoo>
+    <menuitem id="hospital_management_root" name="Hospital Management">
+        <menuitem id="hospital_management_op" name="OP" sequence="2">
+            <menuitem id="hospital_management_op_sub" name="OP Register" action="hospital_management_op_action"/>
+        </menuitem>
+        <menuitem id="hospital_management_consultation" name="Consultation">
+            <menuitem id="hospital_management_consultation_submenu" name="Consultation" action="hospital_management_consultation_action" sequence="3"/>
+        </menuitem>
+        <menuitem id="hospital_management_appointment_menu" name="Appointments" sequence="4">
+            <menuitem id="hospital_management_appointment_submenu" name="Appointment" action="hospital_management_appointment_action"/>
+        </menuitem>
+        <menuitem id="hospital_management_menu" name="Other">
+            <menuitem id="hospital_management_disease_submenu" name="Diseases" action="hospital_management_disease_action"/>
+            <menuitem id="hospital_management_medicine_submenu" name="Medicine" action="hospital_management_medicine_action"/>
+            <menuitem id="hospital_management_payment_submenu" name="Payments" action="hospital_management_payment_action"/>
+        </menuitem>
+    </menuitem>
+</odoo>

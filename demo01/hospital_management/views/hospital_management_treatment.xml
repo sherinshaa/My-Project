@@ -1,0 +1,24 @@
+<odoo>
+
+    <record id="hospital_management_treatment_form_view" model="ir.ui.view">
+        <field name="name">treatment.form</field>
+        <field name="model">hospital.treatment</field>
+        <field name="arch" type="xml">
+            <form string="consultations">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="medicine_id"/>
+                            <field name="dose"/>
+                        </group>
+                        <group>
+                            <field name="day"/>
+                            <field name="description"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+</odoo>

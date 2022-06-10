@@ -1,0 +1,45 @@
+<odoo>
+
+    <record id="inherit_saleteam_view" model="ir.ui.view">
+        <field name="name">inherit.commission.saleteam</field>
+        <field name="model">crm.team</field>
+        <field name="inherit_id" ref="sales_team.crm_team_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//form/sheet/group/group/field[@name='user_id']" position="before">
+                <field name="commission_plan"/>
+            </xpath>
+            <xpath expr="//form/sheet/group/group/field[@name='commission_plan']" position="before">
+                <field name="commission_amount"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="inherit_saleorder_view" model="ir.ui.view">
+        <field name="name">inherit.commission.saleorder</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//form/sheet/group/group/field[@name='date_order']" position="after">
+                <field name="commission_amount_team"/>
+            </xpath>
+            <xpath expr="//form/sheet/group/group/field[@name='commission_amount_team']" position="after">
+                <field name="commission_amount_person"/>
+            </xpath>
+        </field>
+    </record>
+
+    <data noupdate="1">
+        <record id="ir_cron_scheduler_field_reset_action" model="ir.cron">
+            <field name="name">Field Reset</field>
+            <field name="model_id" ref="model_crm_team"/>
+            <field name="state">code</field>
+            <field name="code">model.field_reset()</field>
+            <field name="active" eval="True"/>
+            <field name="user_id" ref="base.user_root"/>
+            <field name="interval_number">1</field>
+            <field name="interval_type">months</field>
+            <field name="numbercall">-1</field>
+        </record>
+    </data>
+
+</odoo>

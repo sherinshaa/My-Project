@@ -1,0 +1,21 @@
+<odoo>
+
+    <record id="crm_commission_productwise_view" model="ir.ui.view">
+        <field name="name">productwise.commission.view</field>
+        <field name="model">productwise.commission</field>
+        <field name="arch" type="xml">
+            <form>
+                <group>
+                    <group>
+                        <field name="product_category_id"/>
+                        <field name="product_id"/>
+                    </group>
+                    <group>
+                        <field name="rate_percentage"/>
+                        <field name="max_commission"/>
+                    </group>
+                </group>
+            </form>
+        </field>
+    </record>
+</odoo>

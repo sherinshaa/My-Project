@@ -1,0 +1,32 @@
+<odoo>
+
+    <record id="crm_graduated_commission_view_plan" model="ir.ui.view">
+        <field name="name">graduated.commission_view</field>
+        <field name="model">graduated.commission</field>
+        <field name="arch" type="xml">
+            <form>
+                <group>
+                    <group>
+                        <field name="graduation_no"/>
+                        <field name="commission_percentage"/>
+                    </group>
+                    <group>
+                        <field name="currency_id" invisible="1"/>
+                        <field name="from_amount"/>
+                        <field name="to_amount"/>
+                    </group>
+                </group>
+            </form>
+        </field>
+    </record>
+
+    <data>
+        <record id="seq_graduated_commission" model="ir.sequence">
+            <field name="name">commission.graduated</field>
+            <field name="code">graduated.commission</field>
+            <field name="prefix">0</field>
+            <field name="padding">1</field>
+        </record>
+    </data>
+
+</odoo>
