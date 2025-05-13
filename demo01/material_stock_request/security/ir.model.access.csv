@@ -1,0 +1,15 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_issue_type,access.issue.type,model_issue_type,base.group_erp_manager,1,1,1,1
+access_issue_type,access.issue.type,model_issue_type,base.group_user,1,0,0,0
+access_stock_request,access_stock_request,model_stock_request,base.group_user,1,1,1,1
+access_stock_request_line,access_stock_request_line,model_stock_request_line,base.group_user,1,1,1,1
+access_transfer_warning,access_transfer_warning,model_transfer_warning,base.group_user,1,1,1,1
+access_product_cost_warning,access_product_cost_warning,model_product_cost_warning,base.group_user,1,1,1,1
+access_material_request,access_material_request,model_material_request,base.group_user,1,1,1,1
+access_material_request_line,access_material_request_line,model_material_request_line,base.group_user,1,1,1,1
+access_material_request_report_wizard,access.material.request.report.wizard,model_material_request_report_wizard,base.group_user,1,1,1,1
+access_stock_request_backorder,access.stock.request.backorder,model_stock_request_backorder,base.group_user,1,1,1,1
+access_stock_request_lot,access.stock.request.lot,model_stock_request_lot,base.group_user,1,1,1,1
+
+
+

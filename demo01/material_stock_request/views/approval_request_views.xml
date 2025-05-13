@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <!--    Inherits the view for approval request-->
+    <record id="approval_request_view_form" model="ir.ui.view">
+        <field name="name">
+            approval.request.view.form.inherit.material.stock.request
+        </field>
+        <field name="model">approval.request</field>
+        <field name="inherit_id" ref="approvals.approval_request_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <button class="oe_stat_button" name="action_material_request"
+                        type="object" icon="fa-file-o" invisible="not material_stock_id">
+                    <div class="o_stat_info">
+                        <span class="o_stat_text">Material Request</span>
+                    </div>
+                </button>
+            </xpath>
+            <xpath expr="//field[@name='request_owner_id']" position="after">
+                <field name="is_material_request_approval" invisible="1"/>
+                <field name="material_stock_id" invisible="1"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

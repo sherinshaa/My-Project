@@ -1,0 +1,300 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <template id="material_stock_request_report">
+        <t t-call="web.html_container">
+            <t t-call="ashraf_base.report_custom_external_layout">
+                <div class="page">
+                    <br/>
+                    <br/>
+                    <t t-foreach="docs" t-as="o">
+                        <div style="align:right;display: flex;text-align: left;margin-top:5px;">
+                            <h1 style="font-size: 25px;align:center;">
+                                Material Request:
+                                <t t-esc="o.name"/>
+                            </h1>
+                        </div>
+                        <table style="width:100%;"
+                               class="table-borderless">
+                            <tr>
+                                <td style="padding-top:5px;">
+                                    <span>Customer
+                                        :
+                                    </span>
+                                    <strong>
+                                        <t t-esc="o.customer_id.name"
+                                        />
+                                    </strong>
+                                </td>
+                                <td>
+                                    <span>Date
+                                        :
+                                    </span>
+                                    <strong>
+                                        <t t-esc="o.date.strftime('%d/%m/%y')"
+                                        />
+                                    </strong>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="padding-top:5px;">
+                                    <span>Div/Dep
+                                        :
+                                    </span>
+                                    <strong><t t-esc="o.division_id.name"
+                                    />/
+                                        <t t-esc="o.department_id.name"/>
+                                    </strong>
+                                </td>
+                                <td t-if="o.issue_date">
+                                    <span>Issue Date
+                                        :
+                                    </span>
+                                    <strong>
+                                        <t t-esc="o.issue_date.strftime('%d/%m/%y')"
+                                        />
+                                    </strong>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="padding-top:5px;">
+                                    <span>Sale Person
+                                        :
+                                    </span>
+                                    <strong>
+                                        <t
+                                                t-esc="o.sales_person_id.name"
+                                        />
+                                    </strong>
+                                </td>
+                                <td>
+                                    <span>Type
+                                        :
+                                    </span>
+                                    <strong>
+                                        <t t-esc="o.issue_type_id.name"
+                                        />
+                                    </strong>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="padding-top:5px;">
+                                    <span>Employee
+                                        :
+                                    </span>
+                                    <strong>
+                                        <t
+                                                t-esc="o.employee_id.name"
+                                        />
+                                    </strong>
+                                </td>
+                                <td>
+                                    <span>State
+                                        :
+                                    </span>
+                                    <strong>
+                                        <t t-esc="{'draft': 'Draft', 'request_approve': 'Request Approve', 'approved': 'Approved', 'verified': 'Verified','partially_returned': 'Partially Returned', 'fully_returned': 'Fully Returned','done': 'Done', 'refuse': 'Refuse', 'cancel': 'Cancel'} [o.state]"/>
+                                    </strong>
+                                </td>
+                            </tr>
+                        </table>
+                        <br/>
+                        <table style="width:100%;"
+                               class="table-borderless">
+                            <thead>
+                                <tr style="border:1px solid black;">
+                                    <th  style="text-align:left;padding:5px;">Sl
+                                        .No</th>
+                                    <th
+                                            style="text-align:left;font-size:15px;width:85px;">Cat.Code</th>
+                                    <th style="font-size:15px;width:150px;">
+                                        Item</th>
+                                    <th
+                                            style="font-size:15px;">Unit Cost</th>
+                                    <th style="font-size:15px;">Demand</th>
+                                    <th style="font-size:15px;">Approved</th>
+                                    <th style="font-size:15px;">Done</th>
+                                    <th style="font-size:15px;">Return</th>
+                                    <th style="font-size:15px;">Total Cost</th>
+                                </tr>
+                            </thead>
+                            <tbody style="font-size:13px;">
+                                <t t-set="index" t-value="0"/>
+                                <t t-foreach="o.move_ids"
+                                   t-as="lines">
+                                    <tr>
+                                        <t t-set="index"
+                                           t-value="index + 1"/>
+                                        <td
+                                                style="text-align:left;padding-top:5px;">
+                                            <t t-esc="index"/>
+                                        </td>
+                                        <td style="text-align:left;">
+                                            <t
+                                                    t-esc="lines.product_id.default_code"/>
+                                        </td>
+                                        <td style="text-align:left;">
+                                            <t
+                                                    t-esc="lines.product_id.name"/>
+                                        </td>
+                                        <td style="text-align:right;">
+                                            <t
+                                                    t-esc="'%.2f'%lines.unit_cost"/>
+                                        </td>
+                                        <td style="text-align:right;">
+                                            <t
+                                                    t-esc="'%.0f'%lines.product_uom_qty"/>
+                                        </td><td style="text-align:right;">
+                                            <t
+                                                    t-esc="lines.approved_quantity"/>
+                                        </td><td style="text-align:right;">
+                                            <t
+                                                    t-esc="'%.0f'%lines.quantity"/>
+                                        </td><td style="text-align:right;">
+                                            <t
+                                                    t-esc="'%.0f'%lines.returned_quantity"/>
+                                        </td><td style="text-align:right;">
+                                            <t
+                                                    t-esc="'%.2f'%lines.total_cost"/>
+                                        </td>
+                                    </tr>
+                                </t>
+                                <tr>
+                                    <td colspan="9"
+                                        style="text-align:right;border-top: 1px solid #000;border-bottom: 1px solid #000;"><strong><t
+                                                    t-esc="'%.2f'%o.total_cost_amount"/></strong></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </t>
+                </div>
+            </t>
+        </t>
+    </template>
+<!--    Dot Matrix report-->
+    <template id="material_stock_request_report_dotmatrix">
+        <t t-call="web.html_container">
+            <t t-call="web.basic_layout">
+                <br/>
+                <br/>
+                <div class="page" width="100%">
+                    <t t-foreach="docs" t-as="o">
+                        <div style="display: flex;text-align: center;font-size:22px;">
+                            <h1 style="font-size: 25px;align:center;">
+                                Material Request
+                            </h1>
+                        </div>
+                        <br/>
+                        <table style="width:100%;"
+                               class="table-borderless">
+                            <tr>
+                                <td style="padding-top:5px;font-size: 14px;">
+                                    <span>Doc Name :</span>
+                                    <span style="font-size: 15px;"><strong><t t-esc="o.name"/></strong></span>
+                                </td>
+                                <td style="font-size: 16px;"/>
+                            </tr>
+                            <tr>
+                                <td style="padding-top:5px;font-size: 14px;">
+                                    <span>Customer :</span>
+                                    <span style="font-size: 15px;"><strong><t t-esc="o.customer_id.name"/></strong></span>
+                                </td>
+                                <td style="font-size: 14px;">
+                                    <span>Date :</span>
+                                    <strong><t t-esc="o.date.strftime('%d/%m/%y')"/></strong>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="padding-top:5px;font-size: 14px;">
+                                    <span>Div/Dep :</span>
+                                    <span style="font-size: 14px;"><strong><t t-esc="o.division_id.name"/>/<t t-esc="o.department_id.name"/></strong></span>
+                                </td>
+                                <td style="font-size: 14px;" t-if="o.issue_date">
+                                    <span>Issue Date :</span>
+                                    <strong><t t-esc="o.issue_date.strftime('%d/%m/%y')"/></strong>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="padding-top:5px;font-size: 14px;">
+                                    <span>Sale Person :</span>
+                                    <span style="font-size:14px;"><t t-esc="o.sales_person_id.name"/></span>
+                                </td>
+                                <td style="font-size: 14px;">
+                                    <span>Type :</span>
+                                    <span style="font-size: 14px;"><strong><t t-esc="o.issue_type_id.name"/></strong></span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="padding-top:5px;font-size: 14px;">
+                                    <span>Employee :</span>
+                                    <span style="font-size:14px;"><t t-esc="o.employee_id.name"/></span>
+                                </td>
+                                <td style="font-size: 14px;">
+                                    <span>State :</span>
+                                    <span style="font-size: 15px;"><t t-esc="{'draft': 'Draft', 'request_approve': 'Request Approve', 'approved': 'Approved', 'verified': 'Verified','partially_returned': 'Partially Returned', 'fully_returned': 'Fully Returned','done': 'Done', 'refuse': 'Refuse', 'cancel': 'Cancel'} [o.state]"/></span>
+                                </td>
+                            </tr>
+                        </table>
+                        <br/>
+                        <table style="width:100%;"
+                               class="table-borderless">
+                            <thead>
+                                <tr style="border:1px solid black;">
+                                    <th style="text-align:left;padding:5px;">Sl .No</th>
+                                    <th style="text-align:left;font-size:15px;width:85px;">Cat.Code</th>
+                                    <th style="font-size:15px;width:150px;">Item</th>
+                                    <th style="font-size:15px;">Unit Cost</th>
+                                    <th style="font-size:15px;">Demand</th>
+                                    <th style="font-size:15px;">Approved</th>
+                                    <th style="font-size:15px;">Done</th>
+                                    <th style="font-size:15px;">Return</th>
+                                    <th style="font-size:15px;">Total Cost</th>
+                                </tr>
+                            </thead>
+                            <tbody style="font-size:13px;">
+                                <t t-set="index" t-value="0"/>
+                                <t t-foreach="o.move_ids"
+                                   t-as="lines">
+                                    <tr>
+                                        <t t-set="index" t-value="index + 1"/>
+                                        <td style="text-align:center;padding-top:5px;">
+                                            <t t-esc="index"/>
+                                        </td>
+                                        <td style="text-align:left;">
+                                            <t t-esc="lines.product_id.default_code"/>
+                                        </td>
+                                        <td style="text-align:left;">
+                                            <t t-esc="lines.product_id.name.capitalize()"/>
+                                        </td>
+                                        <td style="text-align:center;">
+                                            <t t-esc="'%.2f'%lines.unit_cost"/>
+                                        </td>
+                                        <td style="text-align:center;">
+                                            <t t-esc="'%.0f'%lines.product_uom_qty"/>
+                                        </td>
+                                        <td style="text-align:center;">
+                                            <t t-esc="'%.0f'%lines.approved_quantity"/>
+                                        </td>
+                                        <td style="text-align:center;">
+                                            <t t-esc="'%.0f'%lines.quantity"/>
+                                        </td>
+                                        <td style="text-align:center;">
+                                            <t t-esc="'%.0f'%lines.returned_quantity"/>
+                                        </td>
+                                        <td style="text-align:right;">
+                                            <t t-esc="'%.3f'%lines.total_cost"/>
+                                        </td>
+                                    </tr>
+                                </t>
+                                <tr>
+                                    <td colspan="9" style="text-align:right;border-top: 1px solid #000;border-bottom: 1px solid #000;">
+                                        <strong><t t-esc="'%.3f'%o.total_cost_amount"/></strong>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </t>
+                </div>
+            </t>
+        </t>
+    </template>
+</odoo>

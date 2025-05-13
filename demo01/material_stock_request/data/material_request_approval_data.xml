@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <!--        Demo data for material in request approval -->
+        <record id="material_request_department_approvals" model="approval.category">
+            <field name="name">Material Request - Department Approval</field>
+            <field name="description">Material Request Approval for
+                Department
+            </field>
+        </record>
+        <record id="material_request_finance_approvals" model="approval.category">
+            <field name="name">Material Request - Finance Approval</field>
+            <field name="description">Material Request Approval for
+                Finance Team
+            </field>
+        </record>
+        <!--        Demo data for stock in request approval-->
+        <record id="stock_request_approvals" model="approval.category">
+            <field name="name">Stock Request Approval</field>
+            <field name="description">Stock Request Approval for
+                department/division internal transfer
+            </field>
+        </record>
+        <!--        demo data for issue types-->
+        <!--        Item Gift-->
+        <record id="material_stock_request_item_gift" model="issue.type">
+            <field name="name">Item Gift</field>
+            <field name="note">Gifting items to certain clients or users</field>
+        </record>
+
+        <!--        Sample-->
+        <record id="material_stock_request_sample" model="issue.type">
+            <field name="name">Sample</field>
+            <field name="note">Requests to send out and deliver items samples to
+                potential clients
+            </field>
+        </record>
+
+        <!--        Damaged Adjustments-->
+        <record id="material_stock_request_damaged_adjustments"
+                model="issue.type">
+            <field name="name">Damaged Adjustments</field>
+            <field name="note">Issue a request and process certain items as
+                damaged
+            </field>
+        </record>
+
+        <!--        Shortage Adjustment-->
+        <record id="material_stock_request_shortage_adjustment"
+                model="issue.type">
+            <field name="name">Shortage Adjustment</field>
+            <field name="note">Mark certain items as shortages and request then
+                register these items as shortages in receipts
+            </field>
+        </record>
+
+        <!--         Stock Internal Consumptions-->
+        <record id="material_stock_request_internal_consumptions"
+                model="issue.type">
+            <field name="name">Stock Internal Consumptions</field>
+            <field name="note">Consume certain parts/items in the
+                warehouse/showroom and register the items cost
+                as consumed
+            </field>
+        </record>
+
+        <!--        Equipment Service-->
+        <record id="material_stock_request_equipment_service"
+                model="issue.type">
+            <field name="name">Equipment Service</field>
+        </record>
+        <record id="material_stock_request_installation"
+                model="issue.type">
+            <field name="name">Installation</field>
+        </record>
+
+        <!--        Showroom Equipment Service-->
+        <record id="material_stock_request_showroom_equipment"
+                model="issue.type">
+            <field name="name">Showroom Equipment Service</field>
+        </record>
+
+        <!--        Warranty Contract-->
+        <record id="material_stock_request_warranty_contract"
+                model="issue.type">
+            <field name="name">Warranty Contract</field>
+        </record>
+        <!--       Service Contract-->
+        <record id="material_stock_request_service_contract" model="issue.type">
+            <field name="name">Service Contract</field>
+        </record>
+        <record id="material_stock_request_service_inquiry" model="issue.type">
+            <field name="name">Service Inquiry</field>
+        </record>
+
+        <!--        Equipment Reservation-->
+        <record id="material_stock_request_equipment_reservation"
+                model="issue.type">
+            <field name="name">Equipment Reservation</field>
+        </record>
+
+        <!--        Equipment/Item to Fixed Assets -->
+        <record id="material_stock_request_fixed_assets" model="issue.type">
+            <field name="name">Equipment/Item to Fixed Assets</field>
+        </record>
+
+        <!--        Stock Location Transfer-->
+        <record id="material_stock_request_location_transfer"
+                model="issue.type">
+            <field name="name">Stock Location Transfer</field>
+        </record>
+
+        <!--        Intra-Warehouse Transfer-->
+        <record id="material_stock_request_intra_warehouse" model="issue.type">
+            <field name="name">Intra-Warehouse Transfer</field>
+        </record>
+
+        <!--        Inventory Receipt-->
+        <record id="material_stock_request_inventory_receipt"
+                model="issue.type">
+            <field name="name">Inventory Receipt</field>
+        </record>
+
+        <!--        Inventory Delivery-->
+        <record id="material_stock_request_inventory_delivery"
+                model="issue.type">
+            <field name="name">Inventory Delivery</field>
+        </record>
+
+        <!--     Demo data for account.account-->
+        <!--        Issue type expense-->
+        <record id="material_stock_request_item_gift_expense"
+                model="account.account">
+            <field name="name">Item Gift Expense</field>
+            <field name="code">200201</field>
+            <field name="account_type">expense</field>
+        </record>
+    </data>
+</odoo>

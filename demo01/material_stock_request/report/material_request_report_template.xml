@@ -1,0 +1,1080 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="report_material_request">
+        <t t-call="web.html_container">
+            <t t-call="ashraf_base.report_custom_external_layout">
+                <div class="page">
+                    <br/>
+                    <br/>
+                    <t t-if="cost_type == 'without_cost'">
+                        <div style="align:right;display: flex;text-align: left;margin-top:5px;">
+                            <h1 style="font-size: 25px;align:center;">
+                                Material Request Report
+                            </h1>
+                        </div>
+                    </t>
+                    <t t-if="cost_type == 'with_cost'">
+                        <div style="align:right;display: flex;text-align: left;margin-top:5px;">
+                            <h1 style="font-size: 25px;align:center;">
+                                Material Request Report With Cost
+                            </h1>
+                        </div>
+                    </t>
+                    <div class="content">
+                        <span>
+                            <strong>Period::
+                                <t t-esc="from_date"/>
+                                -
+                                <t t-esc="to_date"/>
+                            </strong>
+                        </span>
+                        <br/>
+                        <t t-if="report_type == 'department'">
+                            <t t-foreach="filter_data" t-as="department">
+                                <span>
+                                    <strong>Div/Dep::
+                                        <t t-esc="department.get('division_name')"/>
+                                        /
+                                        <t
+                                                t-esc="department.get('department_name')"/>
+                                    </strong>
+                                </span>
+                                <br/>
+                                <br/>
+                                <table style="width:100%;"
+                                       class="table-borderless total">
+                                    <thead>
+                                        <tr style="border:1px solid black;">
+                                            <th
+                                                    style="text-align:left;font-size:15px;padding:6px;width:40px;">
+                                                Sl.No.
+                                            </th>
+                                            <th
+                                                    style="text-align:left;font-size:15px;margin-top:5px;width:175px;">
+                                                Cat. Code
+                                            </th>
+                                            <th
+                                                    style="text-align:left;font-size:15px;margin-top:5px;width:225px;">
+                                                Item
+                                            </th>
+                                            <th
+                                                    style="text-align:center;font-size:15px;margin-top:5px;width:75px;">
+                                                Demand Qty
+                                            </th>
+                                            <th
+                                                    style="text-align:center;font-size:15px;margin-top:5px;width:75px;">
+                                                Approved Qty
+                                            </th>
+                                            <th
+                                                    style="text-align:center;font-size:15px;margin-top:5px;width:75px;">
+                                                Done Qty
+                                            </th>
+                                            <th
+                                                    style="text-align:center;font-size:15px;margin-top:5px;width:75px;">
+                                                Return Qty
+                                            </th>
+                                            <t t-if="cost_type == 'with_cost'">
+                                                <th
+                                                        style="text-align:center;font-size:15px;margin-top:5px;width:80px;">
+                                                    Cost
+                                                </th>
+                                                <th
+                                                        style="text-align:center;font-size:15px;margin-top:5px;width:80px;">
+                                                    Total Cost
+                                                </th>
+                                            </t>
+                                        </tr>
+                                    </thead>
+                                    <tbody style="font-size:13px;">
+                                        <t t-foreach="request_data"
+                                           t-as="mr">
+                                            <t
+                                                    t-if="department.get('department_id') == mr['department_id']">
+                                                <t t-if="cost_type == 'with_cost'">
+                                                    <tr>
+                                                        <td colspan="9"
+                                                            style="padding-top:15px;">
+                                                            <div
+                                                                    style="text-align:left; display: inline-block; width:220px;">
+                                                                Doc Num:
+                                                                <strong>
+                                                                    <t t-esc="mr['mr']"/>
+                                                                </strong>
+                                                            </div>
+                                                            <div
+                                                                    style="text-align:left; display: inline-block; width:310px;">
+                                                                Customer:
+                                                                <strong>
+                                                                    <t t-esc="mr['customer']"/>
+                                                                </strong>
+                                                            </div>
+                                                            <div
+                                                                    style="text-align:left; display: inline-block; width: 300px;">
+                                                                Salesperson:
+                                                                <strong>
+                                                                    <t t-esc="mr['sales_person']"/>
+                                                                </strong>
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td colspan="9"
+                                                            style="padding-bottom:20px;">
+                                                            <div
+                                                                    style="text-align:left; display: inline-block; width:220px;">
+                                                                Issue Type:
+                                                                <strong>
+                                                                    <t t-esc="mr['issue_type']"/>
+                                                                </strong>
+                                                            </div>
+                                                            <div
+                                                                    style="text-align:left; display: inline-block;width:310px;">
+                                                                Issue
+                                                                Date:
+                                                                <strong>
+                                                                    <t t-esc="mr['issue_date']"/>
+                                                                </strong>
+                                                            </div>
+                                                            <div
+                                                                    style="text-align:left; display: inline-block; width: 300px;">
+                                                                Status:
+                                                                <strong>
+                                                                    <t
+                                                                            t-esc="{'draft': 'Draft', 'request_approve': 'Request Approve', 'approved': 'Approved', 'verified': 'Verified','partially_returned': 'Partially Returned', 'fully_returned': 'Fully Returned','done': 'Done', 'refuse': 'Refuse', 'cancel': 'Cancel'} [mr['state']]"/>
+                                                                </strong>
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                </t>
+                                                <t t-else="">
+                                                    <tr>
+                                                        <td colspan="7"
+                                                            style="padding-top:15px;">
+                                                            <div
+                                                                    style="text-align:left; display: inline-block; width:220px;">
+                                                                Doc Num:
+                                                                <strong>
+                                                                    <t t-esc="mr['mr']"/>
+                                                                </strong>
+                                                            </div>
+                                                            <div
+                                                                    style="text-align:left; display: inline-block; width:310px;">
+                                                                Customer:
+                                                                <strong>
+                                                                    <t t-esc="mr['customer']"/>
+                                                                </strong>
+                                                            </div>
+                                                            <div
+                                                                    style="text-align:left; display: inline-block; width: 300px;">
+                                                                Salesperson:
+                                                                <strong>
+                                                                    <t t-esc="mr['sales_person']"/>
+                                                                </strong>
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td colspan="7"
+                                                            style="padding-bottom:20px;">
+                                                            <div
+                                                                    style="text-align:left; display: inline-block; width:220px;">
+                                                                Issue Type:
+                                                                <strong>
+                                                                    <t t-esc="mr['issue_type']"/>
+                                                                </strong>
+                                                            </div>
+                                                            <div
+                                                                    style="text-align:left; display: inline-block;width:310px;">
+                                                                Issue
+                                                                Date:
+                                                                <strong>
+                                                                    <t t-esc="mr['issue_date']"/>
+                                                                </strong>
+                                                            </div>
+                                                            <div
+                                                                    style="text-align:left; display: inline-block; width: 300px;">
+                                                                Status:
+                                                                <strong>
+                                                                    <t
+                                                                            t-esc="{'draft': 'Draft', 'request_approve': 'Request Approve', 'approved': 'Approved', 'verified': 'Verified','partially_returned': 'Partially Returned', 'fully_returned': 'Fully Returned','done': 'Done', 'refuse': 'Refuse', 'cancel': 'Cancel'} [mr['state']]"/>
+                                                                </strong>
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                </t>
+                                                <t t-set="index" t-value="0"/>
+                                                <t t-set="grand_total"
+                                                   t-value="0"/>
+                                                <t t-foreach="data"
+                                                   t-as="row">
+                                                    <t
+                                                            t-if="mr['mr_id'] == row[0]">
+                                                        <tr
+                                                                class="tr_qty_wise">
+                                                            <t t-set="index"
+                                                               t-value="index + 1"/>
+                                                            <td style="text-align:left;">
+                                                                <t t-esc="index"/>
+                                                            </td>
+                                                            <td style="text-align:left;">
+                                                                <span
+                                                                        t-esc="row[15]"/>
+                                                            </td>
+                                                            <td style="text-align:left;">
+                                                                <span t-if="row[14]"
+                                                                        t-esc="row[14]['en_US']"/>
+                                                            </td>
+                                                            <td
+                                                                    style="text-align:right;">
+                                                                <span
+                                                                        t-esc="row[16]"/>
+                                                            </td>
+                                                            <td style="text-align:right;">
+                                                                <span
+                                                                        t-esc="row[17]"/>
+                                                            </td>
+                                                            <td style="text-align:right;">
+                                                                <span
+                                                                        t-esc="row[18]"/>
+                                                            </td>
+                                                            <t
+                                                                    t-if="row[19]">
+                                                                <td style="text-align:right;">
+                                                                    <span
+                                                                            t-esc="row[19]"/>
+                                                                </td>
+                                                            </t>
+                                                            <t t-else="">
+                                                                <td
+                                                                        style="text-align:center;">
+                                                                    <span>-
+                                                                    </span>
+                                                                </td>
+                                                            </t>
+                                                            <t t-if="cost_type == 'with_cost'">
+                                                                <td style="text-align:right;">
+                                                                    <span t-if="row[21]"
+                                                                            t-esc="'%.2f'%row[21]"/>
+                                                                </td>
+                                                                <td style="text-align:right;">
+                                                                    <span t-if="row[20]"
+                                                                            t-esc="'%.2f'%row[20]"/>
+                                                                </td>
+                                                                 <t
+                                                                        t-if="row[20]">
+                                                                <t
+                                                                        t-set="grand_total"
+                                                                        t-value="grand_total + row[20]"/></t>
+                                                            </t>
+                                                        </tr>
+                                                    </t>
+                                                </t>
+                                                <t t-if="cost_type == 'with_cost'">
+                                                    <tr
+                                                            style="border-top: 1px solid #000;border-bottom: 1px solid #000;">
+                                                        <td colspan="9"
+                                                            style="text-align:right;">
+                                                            <strong>
+                                                                <t
+                                                                        t-esc="'%.2f'%grand_total"/>
+                                                            </strong>
+                                                        </td>
+                                                    </tr>
+                                                </t>
+                                            </t>
+                                        </t>
+                                    </tbody>
+                                </table>
+                                <br/>
+                            </t>
+                        </t>
+                        <t t-elif="report_type == 'customer'">
+                            <t t-foreach="filter_data" t-as="customer">
+                                <span>
+                                    <strong>Customer::
+                                        <t t-esc="customer.get('customer_name')"/>
+                                    </strong>
+                                </span>
+                                <br/>
+                                <br/>
+                                <table style="width:100%;"
+                                       class="table-borderless total">
+                                    <thead>
+                                        <tr style="border:1px solid black;">
+                                            <th
+                                                    style="text-align:left;font-size:15px;padding:6px;width:50px;">
+                                                Sl.No.
+                                            </th>
+                                            <th
+                                                    style="text-align:left;font-size:15px;margin-top:5px;width:180px;">
+                                                Cat. Code
+                                            </th>
+                                            <th
+                                                    style="text-align:left;font-size:15px;margin-top:5px;width:250px;">
+                                                Item
+                                            </th>
+                                            <th
+                                                    style="text-align:center;font-size:15px;margin-top:5px;width:75px;">
+                                                Demand Qty
+                                            </th>
+                                            <th
+                                                    style="text-align:center;font-size:15px;margin-top:5px;width:75px;">
+                                                Approved Qty
+                                            </th>
+                                            <th
+                                                    style="text-align:center;font-size:15px;margin-top:5px;width:75px;">
+                                                Done Qty
+                                            </th>
+                                            <th
+                                                    style="text-align:center;font-size:15px;margin-top:5px;width:75px;">
+                                                Return Qty
+                                            </th>
+                                            <t t-if="cost_type == 'with_cost'">
+                                                <th
+                                                        style="text-align:center;font-size:15px;margin-top:5px;width:80px;">
+                                                    Cost
+                                                </th>
+                                                <th
+                                                        style="text-align:center;font-size:15px;margin-top:5px;width:80px;">
+                                                    Total Cost
+                                                </th>
+                                            </t>
+                                        </tr>
+                                    </thead>
+                                    <tbody style="font-size:13px;">
+                                        <t t-foreach="request_data"
+                                           t-as="mr">
+                                            <t
+                                                    t-if="customer.get('customer_id') == mr['customer_id']">
+                                                <t t-if="cost_type == 'with_cost'">
+                                                    <tr>
+                                                        <td colspan="9"
+                                                            style="padding-top:15px;">
+                                                            <div
+                                                                    style="text-align:left; display: inline-block; width:220px;">
+                                                                Doc Num:
+                                                                <strong>
+                                                                    <t t-esc="mr['mr']"/>
+                                                                </strong>
+                                                            </div>
+                                                            <div
+                                                                    style="text-align:left; display: inline-block; width:310px;">
+                                                                DIV/DEP:
+                                                                <strong>
+                                                                    <t
+                                                                            t-esc="mr['division']"/>
+                                                                    /
+                                                                    <t t-esc="mr['department']"/>
+                                                                </strong>
+                                                            </div>
+                                                            <div
+                                                                    style="text-align:left; display: inline-block; width: 300px;">
+                                                                Salesperson:
+                                                                <strong>
+                                                                    <t t-esc="mr['sales_person']"/>
+                                                                </strong>
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td colspan="9"
+                                                            style="padding-bottom:20px;">
+                                                            <div
+                                                                    style="text-align:left; display: inline-block; width:220px;">
+                                                                Issue Type:
+                                                                <strong>
+                                                                    <t t-esc="mr['issue_type']"/>
+                                                                </strong>
+                                                            </div>
+                                                            <div
+                                                                    style="text-align:left; display: inline-block;width:310px;">
+                                                                Issue
+                                                                Date:
+                                                                <strong>
+                                                                    <t t-esc="mr['issue_date']"/>
+                                                                </strong>
+                                                            </div>
+                                                            <div
+                                                                    style="text-align:left; display: inline-block; width: 300px;">
+                                                                Status:
+                                                                <strong>
+                                                                    <t
+                                                                            t-esc="{'draft': 'Draft', 'request_approve': 'Request Approve', 'approved': 'Approved', 'verified': 'Verified','partially_returned': 'Partially Returned', 'fully_returned': 'Fully Returned','done': 'Done', 'refuse': 'Refuse', 'cancel': 'Cancel'} [mr['state']]"/>
+                                                                </strong>
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                </t>
+                                                <t t-else="">
+                                                    <tr>
+                                                        <td colspan="7"
+                                                            style="padding-top:15px;">
+                                                            <div
+                                                                    style="text-align:left; display: inline-block; width:220px;">
+                                                                Doc Num:
+                                                                <strong>
+                                                                    <t t-esc="mr['mr']"/>
+                                                                </strong>
+                                                            </div>
+                                                            <div
+                                                                    style="text-align:left; display: inline-block; width:310px;">
+                                                                DIV/DEP:
+                                                                <strong>
+                                                                    <t
+                                                                            t-esc="mr['division']"/>
+                                                                    /
+                                                                    <t t-esc="mr['department']"/>
+                                                                </strong>
+                                                            </div>
+                                                            <div
+                                                                    style="text-align:left; display: inline-block; width: 300px;">
+                                                                Salesperson:
+                                                                <strong>
+                                                                    <t t-esc="mr['sales_person']"/>
+                                                                </strong>
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td colspan="7"
+                                                            style="padding-bottom:20px;">
+                                                            <div
+                                                                    style="text-align:left; display: inline-block; width:220px;">
+                                                                Issue Type:
+                                                                <strong>
+                                                                    <t t-esc="mr['issue_type']"/>
+                                                                </strong>
+                                                            </div>
+                                                            <div
+                                                                    style="text-align:left; display: inline-block;width:310px;">
+                                                                Issue
+                                                                Date:
+                                                                <strong>
+                                                                    <t t-esc="mr['issue_date']"/>
+                                                                </strong>
+                                                            </div>
+                                                            <div
+                                                                    style="text-align:left; display: inline-block; width: 300px;">
+                                                                Status:
+                                                                <strong>
+                                                                    <t
+                                                                            t-esc="{'draft': 'Draft', 'request_approve': 'Request Approve', 'approved': 'Approved', 'verified': 'Verified','partially_returned': 'Partially Returned', 'fully_returned': 'Fully Returned','done': 'Done', 'refuse': 'Refuse', 'cancel': 'Cancel'} [mr['state']]"/>
+                                                                </strong>
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                </t>
+                                                <t t-set="index" t-value="0"/>
+                                                <t t-set="grand_total"
+                                                   t-value="0"/>
+                                                <t t-foreach="data"
+                                                   t-as="row">
+                                                    <t
+                                                            t-if="mr['mr_id'] == row[0]">
+                                                        <tr
+                                                                class="tr_qty_wise">
+                                                            <t t-set="index"
+                                                               t-value="index + 1"/>
+                                                            <td style="text-align:left;">
+                                                                <t t-esc="index"/>
+                                                            </td>
+                                                            <td style="text-align:left;">
+                                                                <span
+                                                                        t-esc="row[15]"/>
+                                                            </td>
+                                                            <td style="text-align:left;">
+                                                                <span t-if="row[14]"
+                                                                        t-esc="row[14]['en_US']"/>
+                                                            </td>
+                                                            <td
+                                                                    style="text-align:right;">
+                                                                <span
+                                                                        t-esc="row[16]"/>
+                                                            </td>
+                                                            <td style="text-align:right;">
+                                                                <span
+                                                                        t-esc="row[17]"/>
+                                                            </td>
+                                                            <td style="text-align:right;">
+                                                                <span
+                                                                        t-esc="row[18]"/>
+                                                            </td>
+                                                            <t
+                                                                    t-if="row[19]">
+                                                                <td style="text-align:right;">
+                                                                    <span
+                                                                            t-esc="row[19]"/>
+                                                                </td>
+                                                            </t>
+                                                            <t t-else="">
+                                                                <td
+                                                                        style="text-align:center;">
+                                                                    <span>-
+                                                                    </span>
+                                                                </td>
+                                                            </t>
+                                                            <t t-if="cost_type == 'with_cost'">
+                                                                <td style="text-align:right;">
+                                                                    <span t-if="row[21]"
+                                                                            t-esc="'%.2f'%row[21]"/>
+                                                                </td>
+                                                                <td style="text-align:right;">
+                                                                    <span t-if="row[20]"
+                                                                            t-esc="'%.2f'%row[20]"/>
+                                                                </td>
+                                                                 <t
+                                                                        t-if="row[20]">
+                                                                <t
+                                                                        t-set="grand_total"
+                                                                        t-value="grand_total + row[20]"/></t>
+                                                            </t>
+                                                        </tr>
+                                                    </t>
+                                                </t>
+                                                <t t-if="cost_type == 'with_cost'">
+                                                    <tr
+                                                            style="border-top: 1px solid #000;border-bottom: 1px solid #000;">
+                                                        <td colspan="9"
+                                                            style="text-align:right;">
+                                                            <strong>
+                                                                <t
+                                                                        t-esc="'%.2f'%grand_total"/>
+                                                            </strong>
+                                                        </td>
+                                                    </tr>
+                                                </t>
+                                            </t>
+                                        </t>
+                                    </tbody>
+                                </table>
+                                <br/>
+                            </t>
+                        </t>
+                        <t t-elif="report_type == 'issue_type'">
+                            <t t-foreach="filter_data" t-as="issue_type">
+                                <span>
+                                    <strong>Issue Type::
+                                        <t t-esc="issue_type.get('issue_type_name')"/>
+                                    </strong>
+                                </span>
+                                <br/>
+                                <br/>
+                                <table style="width:100%;"
+                                       class="table-borderless total">
+                                    <thead>
+                                        <tr style="border:1px solid black;">
+                                            <th
+                                                    style="text-align:left;font-size:15px;padding:6px;width:50px;">
+                                                Sl.No.
+                                            </th>
+                                            <th
+                                                    style="text-align:left;font-size:15px;margin-top:5px;width:180px;">
+                                                Cat. Code
+                                            </th>
+                                            <th
+                                                    style="text-align:left;font-size:15px;margin-top:5px;width:250px;">
+                                                Item
+                                            </th>
+                                            <th
+                                                    style="text-align:center;font-size:15px;margin-top:5px;width:75px;">
+                                                Demand Qty
+                                            </th>
+                                            <th
+                                                    style="text-align:center;font-size:15px;margin-top:5px;width:75px;">
+                                                Approved Qty
+                                            </th>
+                                            <th
+                                                    style="text-align:center;font-size:15px;margin-top:5px;width:75px;">
+                                                Done Qty
+                                            </th>
+                                            <th
+                                                    style="text-align:center;font-size:15px;margin-top:5px;width:75px;">
+                                                Return Qty
+                                            </th>
+                                            <t t-if="cost_type == 'with_cost'">
+                                                <th
+                                                        style="text-align:center;font-size:15px;margin-top:5px;width:80px;">
+                                                    Cost
+                                                </th>
+                                                <th
+                                                        style="text-align:center;font-size:15px;margin-top:5px;width:80px;">
+                                                    Total Cost
+                                                </th>
+                                            </t>
+                                        </tr>
+                                    </thead>
+                                    <tbody style="font-size:13px;">
+                                        <t t-foreach="request_data"
+                                           t-as="mr">
+                                            <t
+                                                    t-if="issue_type.get('issue_type_id') == mr['issue_type_id']">
+                                                <t t-if="cost_type == 'with_cost'">
+                                                    <tr>
+                                                        <td colspan="9"
+                                                            style="padding-top:15px;">
+                                                            <div
+                                                                    style="text-align:left; display: inline-block; width:220px;">
+                                                                Doc Num:
+                                                                <strong>
+                                                                    <t t-esc="mr['mr']"/>
+                                                                </strong>
+                                                            </div>
+                                                            <div
+                                                                    style="text-align:left; display: inline-block; width:310px;">
+                                                                DIV/DEP:
+                                                                <strong>
+                                                                    <t
+                                                                            t-esc="mr['division']"/>
+                                                                    /
+                                                                    <t t-esc="mr['department']"/>
+                                                                </strong>
+                                                            </div>
+                                                            <div
+                                                                    style="text-align:left; display: inline-block; width: 300px;">
+                                                                Salesperson:
+                                                                <strong>
+                                                                    <t t-esc="mr['sales_person']"/>
+                                                                </strong>
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td colspan="9"
+                                                            style="padding-bottom:20px;">
+                                                            <div
+                                                                    style="text-align:left; display: inline-block; width:220px;">
+                                                                Issue Date:
+                                                                <strong>
+                                                                    <t t-esc="mr['issue_date']"/>
+                                                                </strong>
+                                                            </div>
+                                                            <div
+                                                                    style="text-align:left; display: inline-block;width:310px;">
+                                                                Customer:
+                                                                <strong>
+                                                                    <t t-esc="mr['customer']"/>
+                                                                </strong>
+                                                            </div>
+                                                            <div
+                                                                    style="text-align:left; display: inline-block; width: 300px;">
+                                                                Status:
+                                                                <strong>
+                                                                    <t
+                                                                            t-esc="{'draft': 'Draft', 'request_approve': 'Request Approve', 'approved': 'Approved', 'verified': 'Verified','partially_returned': 'Partially Returned', 'fully_returned': 'Fully Returned','done': 'Done', 'refuse': 'Refuse', 'cancel': 'Cancel'} [mr['state']]"/>
+                                                                </strong>
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                </t>
+                                                <t t-else="">
+                                                    <tr>
+                                                        <td colspan="7"
+                                                            style="padding-top:15px;">
+                                                            <div
+                                                                    style="text-align:left; display: inline-block; width:220px;">
+                                                                Doc Num:
+                                                                <strong>
+                                                                    <t t-esc="mr['mr']"/>
+                                                                </strong>
+                                                            </div>
+                                                            <div
+                                                                    style="text-align:left; display: inline-block; width:310px;">
+                                                                DIV/DEP:
+                                                                <strong>
+                                                                    <t
+                                                                            t-esc="mr['division']"/>
+                                                                    /
+                                                                    <t t-esc="mr['department']"/>
+                                                                </strong>
+                                                            </div>
+                                                            <div
+                                                                    style="text-align:left; display: inline-block; width: 300px;">
+                                                                Salesperson:
+                                                                <strong>
+                                                                    <t t-esc="mr['sales_person']"/>
+                                                                </strong>
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td colspan="7"
+                                                            style="padding-bottom:20px;">
+                                                            <div
+                                                                    style="text-align:left; display: inline-block; width:220px;">
+                                                                Issue Date:
+                                                                <strong>
+                                                                    <t t-esc="mr['issue_date']"/>
+                                                                </strong>
+                                                            </div>
+                                                            <div
+                                                                    style="text-align:left; display: inline-block;width:310px;">
+                                                                Customer:
+                                                                <strong>
+                                                                    <t t-esc="mr['customer']"/>
+                                                                </strong>
+                                                            </div>
+                                                            <div
+                                                                    style="text-align:left; display: inline-block; width: 300px;">
+                                                                Status:
+                                                                <strong>
+                                                                    <t
+                                                                            t-esc="{'draft': 'Draft', 'request_approve': 'Request Approve', 'approved': 'Approved', 'verified': 'Verified','partially_returned': 'Partially Returned', 'fully_returned': 'Fully Returned','done': 'Done', 'refuse': 'Refuse', 'cancel': 'Cancel'} [mr['state']]"/>
+                                                                </strong>
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                </t>
+                                                <t t-set="index" t-value="0"/>
+                                                <t t-set="grand_total"
+                                                   t-value="0"/>
+                                                <t t-foreach="data"
+                                                   t-as="row">
+                                                    <t
+                                                            t-if="mr['mr_id'] == row[0]">
+                                                        <tr
+                                                                class="tr_qty_wise">
+                                                            <t t-set="index"
+                                                               t-value="index + 1"/>
+                                                            <td style="text-align:left;">
+                                                                <t t-esc="index"/>
+                                                            </td>
+                                                            <td style="text-align:left;">
+                                                                <span
+                                                                        t-esc="row[15]"/>
+                                                            </td>
+                                                            <td style="text-align:left;">
+                                                                <span t-if="row[14]"
+                                                                        t-esc="row[14]['en_US']"/>
+                                                            </td>
+                                                            <td
+                                                                    style="text-align:right;">
+                                                                <span
+                                                                        t-esc="row[16]"/>
+                                                            </td>
+                                                            <td style="text-align:right;">
+                                                                <span
+                                                                        t-esc="row[17]"/>
+                                                            </td>
+                                                            <td style="text-align:right;">
+                                                                <span
+                                                                        t-esc="row[18]"/>
+                                                            </td>
+                                                            <t
+                                                                    t-if="row[19]">
+                                                                <td style="text-align:right;">
+                                                                    <span
+                                                                            t-esc="row[19]"/>
+                                                                </td>
+                                                            </t>
+                                                            <t t-else="">
+                                                                <td
+                                                                        style="text-align:center;">
+                                                                    <span>-
+                                                                    </span>
+                                                                </td>
+                                                            </t>
+                                                            <t t-if="cost_type == 'with_cost'">
+                                                                <td style="text-align:right;">
+                                                                    <span t-if="row[21]"
+                                                                            t-esc="'%.2f'%row[21]"/>
+                                                                </td>
+                                                                <td style="text-align:right;">
+                                                                    <span t-if="row[20]"
+                                                                            t-esc="'%.2f'%row[20]"/>
+                                                                </td>
+                                                                 <t
+                                                                        t-if="row[20]">
+                                                                <t
+                                                                        t-set="grand_total"
+                                                                        t-value="grand_total + row[20]"/></t>
+                                                            </t>
+                                                        </tr>
+                                                    </t>
+                                                </t>
+                                                <t t-if="cost_type == 'with_cost'">
+                                                    <tr
+                                                            style="border-top: 1px solid #000;border-bottom: 1px solid #000;">
+                                                        <td colspan="9"
+                                                            style="text-align:right;">
+                                                            <strong>
+                                                                <t
+                                                                        t-esc="'%.2f'%grand_total"/>
+                                                            </strong>
+                                                        </td>
+                                                    </tr>
+                                                </t>
+                                            </t>
+                                        </t>
+                                    </tbody>
+                                </table>
+                                <br/>
+                            </t>
+                        </t>
+                        <t t-else="">
+                            <t t-foreach="filter_data" t-as="sales_person">
+                                <span>
+                                    <strong>Sale Person::
+                                        <t t-esc="sales_person.get('sales_person_name')"/>
+                                    </strong>
+                                </span>
+                                <br/>
+                                <br/>
+                                <table style="width:100%;"
+                                       class="table-borderless total">
+                                    <thead>
+                                        <tr style="border:1px solid black;">
+                                            <th
+                                                    style="text-align:left;font-size:15px;padding:6px;width:50px;">
+                                                Sl.No.
+                                            </th>
+                                            <th
+                                                    style="text-align:left;font-size:15px;margin-top:5px;width:180px;">
+                                                Cat. Code
+                                            </th>
+                                            <th
+                                                    style="text-align:left;font-size:15px;margin-top:5px;width:250px;">
+                                                Item
+                                            </th>
+                                            <th
+                                                    style="text-align:center;font-size:15px;margin-top:5px;width:75px;">
+                                                Demand Qty
+                                            </th>
+                                            <th
+                                                    style="text-align:center;font-size:15px;margin-top:5px;width:75px;">
+                                                Approved Qty
+                                            </th>
+                                            <th
+                                                    style="text-align:center;font-size:15px;margin-top:5px;width:75px;">
+                                                Done Qty
+                                            </th>
+                                            <th
+                                                    style="text-align:center;font-size:15px;margin-top:5px;width:75px;">
+                                                Return Qty
+                                            </th>
+                                            <t t-if="cost_type == 'with_cost'">
+                                                <th
+                                                        style="text-align:center;font-size:15px;margin-top:5px;width:80px;">
+                                                    Cost
+                                                </th>
+                                                <th
+                                                        style="text-align:center;font-size:15px;margin-top:5px;width:80px;">
+                                                    Total Cost
+                                                </th>
+                                            </t>
+                                        </tr>
+                                    </thead>
+                                    <tbody style="font-size:13px;">
+                                        <t t-foreach="request_data"
+                                           t-as="mr">
+                                            <t
+                                                    t-if="sales_person.get('sales_person_id') == mr['sales_person_id']">
+                                                <t t-if="cost_type == 'with_cost'">
+                                                    <tr>
+                                                        <td colspan="9"
+                                                            style="padding-top:15px;">
+                                                            <div
+                                                                    style="text-align:left; display: inline-block; width:220px;">
+                                                                Doc Num:
+                                                                <strong>
+                                                                    <t t-esc="mr['mr']"/>
+                                                                </strong>
+                                                            </div>
+                                                            <div
+                                                                    style="text-align:left; display: inline-block; width:310px;">
+                                                                DIV/DEP:
+                                                                <strong>
+                                                                    <t
+                                                                            t-esc="mr['division']"/>
+                                                                    /
+                                                                    <t t-esc="mr['department']"/>
+                                                                </strong>
+                                                            </div>
+                                                            <div
+                                                                    style="text-align:left; display: inline-block; width: 300px;">
+                                                                Customer:
+                                                                <strong>
+                                                                    <t t-esc="mr['customer']"/>
+                                                                </strong>
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td colspan="9"
+                                                            style="padding-bottom:20px;">
+                                                            <div
+                                                                    style="text-align:left; display: inline-block; width:220px;">
+                                                                Issue Date:
+                                                                <strong>
+                                                                    <t t-esc="mr['issue_date']"/>
+                                                                </strong>
+                                                            </div>
+                                                            <div
+                                                                    style="text-align:left; display: inline-block;width:310px;">
+                                                                Salesperson:
+                                                                <strong>
+                                                                    <t t-esc="mr['sales_person']"/>
+                                                                </strong>
+
+                                                            </div>
+                                                            <div
+                                                                    style="text-align:left; display: inline-block; width: 300px;">
+                                                                Status:
+                                                                <strong>
+                                                                    <t
+                                                                            t-esc="{'draft': 'Draft', 'request_approve': 'Request Approve', 'approved': 'Approved', 'verified': 'Verified','partially_returned': 'Partially Returned', 'fully_returned': 'Fully Returned','done': 'Done', 'refuse': 'Refuse', 'cancel': 'Cancel'} [mr['state']]"/>
+                                                                </strong>
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                </t>
+                                                <t t-else="">
+                                                    <tr>
+                                                        <td colspan="7"
+                                                            style="padding-top:15px;">
+                                                            <div
+                                                                    style="text-align:left; display: inline-block; width:220px;">
+                                                                Doc Num:
+                                                                <strong>
+                                                                    <t t-esc="mr['mr']"/>
+                                                                </strong>
+                                                            </div>
+                                                            <div
+                                                                    style="text-align:left; display: inline-block; width:310px;">
+                                                                DIV/DEP:
+                                                                <strong>
+                                                                    <t
+                                                                            t-esc="mr['division']"/>
+                                                                    /
+                                                                    <t t-esc="mr['department']"/>
+                                                                </strong>
+                                                            </div>
+                                                            <div
+                                                                    style="text-align:left; display: inline-block; width: 300px;">
+                                                                Customer:
+                                                                <strong>
+                                                                    <t t-esc="mr['customer']"/>
+                                                                </strong>
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td colspan="7"
+                                                            style="padding-bottom:20px;">
+                                                            <div
+                                                                    style="text-align:left; display: inline-block; width:220px;">
+                                                                Issue Date:
+                                                                <strong>
+                                                                    <t t-esc="mr['issue_date']"/>
+                                                                </strong>
+                                                            </div>
+                                                            <div
+                                                                    style="text-align:left; display: inline-block;width:310px;">
+                                                                Salesperson:
+                                                                <strong>
+                                                                    <t t-esc="mr['sales_person']"/>
+                                                                </strong>
+
+                                                            </div>
+                                                            <div
+                                                                    style="text-align:left; display: inline-block; width: 300px;">
+                                                                Status:
+                                                                <strong>
+                                                                    <t
+                                                                            t-esc="{'draft': 'Draft', 'request_approve': 'Request Approve', 'approved': 'Approved', 'verified': 'Verified','partially_returned': 'Partially Returned', 'fully_returned': 'Fully Returned','done': 'Done', 'refuse': 'Refuse', 'cancel': 'Cancel'} [mr['state']]"/>
+                                                                </strong>
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                </t>
+                                                <t t-set="index" t-value="0"/>
+                                                <t t-set="grand_total"
+                                                   t-value="0"/>
+                                                <t t-foreach="data"
+                                                   t-as="row">
+                                                    <t
+                                                            t-if="mr['mr_id'] == row[0]">
+                                                        <tr
+                                                                class="tr_qty_wise">
+                                                            <t t-set="index"
+                                                               t-value="index + 1"/>
+                                                            <td style="text-align:left;">
+                                                                <t t-esc="index"/>
+                                                            </td>
+                                                            <td style="text-align:left;">
+                                                                <span
+                                                                        t-esc="row[15]"/>
+                                                            </td>
+                                                            <td style="text-align:left;">
+                                                                <span t-if="row[14]"
+                                                                        t-esc="row[14]['en_US']"/>
+                                                            </td>
+                                                            <td
+                                                                    style="text-align:right;">
+                                                                <span
+                                                                        t-esc="row[16]"/>
+                                                            </td>
+                                                            <td style="text-align:right;">
+                                                                <span
+                                                                        t-esc="row[17]"/>
+                                                            </td>
+                                                            <td style="text-align:right;">
+                                                                <span
+                                                                        t-esc="row[18]"/>
+                                                            </td>
+                                                            <t
+                                                                    t-if="row[19]">
+                                                                <td style="text-align:right;">
+                                                                    <span
+                                                                            t-esc="row[19]"/>
+                                                                </td>
+                                                            </t>
+                                                            <t t-else="">
+                                                                <td
+                                                                        style="text-align:center;">
+                                                                    <span>-
+                                                                    </span>
+                                                                </td>
+                                                            </t>
+                                                            <t t-if="cost_type == 'with_cost'">
+                                                                <td style="text-align:right;">
+                                                                    <span t-if="row[21]"
+                                                                            t-esc="'%.2f'%row[21]"/>
+                                                                </td>
+                                                                <td style="text-align:right;">
+                                                                    <span t-if="row[20]"
+                                                                            t-esc="'%.2f'%row[20]"/>
+                                                                </td>
+                                                                <t
+                                                                        t-if="row[20]">
+                                                                <t
+                                                                        t-set="grand_total"
+                                                                        t-value="grand_total + row[20]"/></t>
+                                                            </t>
+                                                        </tr>
+                                                    </t>
+                                                </t>
+                                                <t t-if="cost_type == 'with_cost'">
+                                                    <tr
+                                                            style="border-top: 1px solid #000;border-bottom: 1px solid #000;">
+                                                        <td colspan="9"
+                                                            style="text-align:right;">
+                                                            <strong>
+                                                                <t
+                                                                        t-esc="'%.2f'%grand_total"/>
+                                                            </strong>
+                                                        </td>
+                                                    </tr>
+                                                </t>
+                                            </t>
+                                        </t>
+                                    </tbody>
+                                </table>
+                                <br/>
+                            </t>
+                        </t>
+                    </div>
+                </div>
+            </t>
+        </t>
+    </template>
+</odoo>

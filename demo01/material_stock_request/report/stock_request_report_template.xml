@@ -1,0 +1,928 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <!--    Summary-->
+    <template id="stock_request_pdf_report_summary">
+        <t t-call="web.html_container">
+            <t t-call="ashraf_base.report_custom_external_layout">
+                <t t-foreach="docs" t-as="doc">
+                    <div class="page">
+                        <br/>
+                        <br/>
+                        <div style="align:right;display: flex;text-align: left;margin-bottom:25px;">
+                            <h1 style="font-size: 25px;align:center;">
+                                Stock Request:
+                                <t t-esc="doc.name"/>
+                            </h1>
+                        </div>
+                        <table style="width:100%;"
+                               class="table-borderless">
+                            <tr>
+                                <td style="padding-top:5px;">
+                                    <span>Operation Type
+                                        :
+                                    </span>
+                                    <strong>
+                                        <t t-esc="doc.picking_type_id.name"
+                                        />
+                                    </strong>
+                                </td>
+                                <td>
+                                    <span>Date
+                                        :
+                                    </span>
+                                    <strong>
+                                        <t
+                                                t-esc="doc.date.strftime('%d/%m/%Y')"
+                                        />
+                                    </strong>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="padding-top:5px;">
+                                    <span>From Dept
+                                        :
+                                    </span>
+                                    <strong>
+                                        <t t-esc="doc.from_department_id.name"/>
+                                    </strong>
+                                </td>
+                                <td>
+                                    <span>Requested By :</span>
+                                    <strong>
+                                        <t t-esc="doc.request_by.name"/>
+                                    </strong>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="padding-top:5px;">
+                                    <span>To Dept
+                                        :
+                                    </span>
+                                    <strong>
+                                        <t t-esc="doc.to_department_id.name"/>
+                                    </strong>
+                                </td>
+                                <td style="padding-top:5px;">
+                                    <span>Approved By :</span>
+                                    <strong>
+                                        <t t-esc="doc.approved_by.name"
+                                        />
+                                    </strong>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="padding-top:5px;">
+                                    <span>State
+                                        :
+                                    </span>
+                                    <strong>
+                                        <t
+                                                t-esc="{'draft': 'Draft', 'request_approve': 'Request Approve', 'approved': 'Approved', 'verified': 'Verified','partially_returned': 'Partially Returned', 'fully_returned': 'Fully Returned','done': 'Done', 'refuse': 'Refuse', 'cancel': 'Cancel', 'transit': 'In Transit'} [doc.state]"/>
+                                    </strong>
+
+
+                                </td>
+
+                            </tr>
+                            <tr>
+                                <td>
+
+                                </td>
+                            </tr>
+                        </table>
+                        <hr/>
+                        <br/>
+                        <table style="width:100%;"
+                               class="table-borderless">
+                            <thead>
+                                <tr>
+                                    <th style="text-align:left;width:55px;">Sl
+                                        .No
+                                    </th>
+                                    <th
+                                            style="text-align:left;font-size:15px;">
+                                        Cat.Code
+                                    </th>
+                                    <th
+                                            style="font-size:15px;width:250px;text-align:left;">
+                                        Item
+                                    </th>
+                                    <th
+                                            style="font-size:15px;">Demand
+                                    </th>
+                                    <th
+                                            style="font-size:15px;">Approved
+                                    </th>
+                                    <th style="font-size:15px;">Done
+                                    </th>
+                                    <th style="font-size:15px;">
+                                        Received
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody style="width:100%;">
+                                <t t-set="index" t-value="0"/>
+                                <t t-foreach="doc.move_ids"
+                                   t-as="lines">
+                                    <tr>
+                                        <t t-set="index"
+                                           t-value="index + 1"/>
+                                        <td
+                                                style="text-align:left;padding:10px;font-size:15px;">
+                                            <t t-esc="index"/>
+                                        </td>
+                                        <td
+                                                style="text-align:left;font-size:15px;">
+                                            <t t-esc="lines.product_id.default_code"/>
+                                        </td>
+                                        <td
+                                                style="text-align:left;font-size:15px;">
+                                            <t t-esc="lines.product_id.name"/>
+                                        </td>
+                                        <td
+                                                style="text-align:center;font-size:15px;">
+                                            <t t-esc="'%.0f'%lines.product_uom_qty"/>
+                                        </td>
+                                        <td
+                                                style="text-align:center;font-size:15px;">
+                                            <t t-esc="'%.0f'%lines.quantity"/>
+                                        </td>
+                                        <td style="text-align:center;font-size:15px;">
+                                            <t
+                                                    t-esc="'%.0f'%lines.issued_qty"
+                                                    t-if="doc.state in ['transit', 'done', 'refuse','cancel']"/>
+                                            <span
+                                                    t-if="doc.state in ['draft', 'request_approve', 'approved']">
+                                                0
+                                            </span>
+                                        </td>
+                                        <td
+                                                style="text-align:center;font-size:15px;">
+                                            <t t-esc="'%.0f'%lines.already_received_qty"/>
+                                        </td>
+                                    </tr>
+                                </t>
+                            </tbody>
+                        </table>
+                    </div>
+                    <br/>
+                    <br/>
+                    <br/>
+                    <br/>
+                    <br/>
+                    <br/>
+                    <hr/>
+                </t>
+            </t>
+        </t>
+    </template>
+    <!--    Summary dot matrix-->
+    <template id="stock_request_pdf_report_summary_dot_matrix">
+        <t t-call="web.html_container">
+            <t t-call="web.basic_layout">
+                <t t-foreach="docs" t-as="doc">
+                    <div class="page">
+                        <br/>
+                        <br/>
+                        <div style="align:right;display: flex;text-align: left;margin-bottom:25px;">
+                            <h1 style="font-size: 25px;align:center;">
+                                Stock Request:
+                                <t t-esc="doc.name"/>
+                            </h1>
+                        </div>
+                        <table style="width:100%;"
+                               class="table-borderless">
+                            <tr>
+                                <td style="padding-top:5px;">
+                                    <span>Operation Type
+                                        :
+                                    </span>
+                                    <strong>
+                                        <t t-esc="doc.picking_type_id.name"
+                                        />
+                                    </strong>
+                                </td>
+                                <td>
+                                    <span>Date
+                                        :
+                                    </span>
+                                    <strong>
+                                        <t
+                                                t-esc="doc.date.strftime('%d/%m/%Y')"
+                                        />
+                                    </strong>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="padding-top:5px;">
+                                    <span>From Dept
+                                        :
+                                    </span>
+                                    <strong>
+                                        <t t-esc="doc.from_department_id.name"/>
+                                    </strong>
+                                </td>
+                                <td>
+                                    <span>Requested By :</span>
+                                    <strong>
+                                        <t t-esc="doc.request_by.name"/>
+                                    </strong>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="padding-top:5px;">
+                                    <span>To Dept
+                                        :
+                                    </span>
+                                    <strong>
+                                        <t t-esc="doc.to_department_id.name"/>
+                                    </strong>
+                                </td>
+                                <td style="padding-top:5px;">
+                                    <span>Approved By :</span>
+                                    <strong>
+                                        <t t-esc="doc.approved_by.name"
+                                        />
+                                    </strong>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="padding-top:5px;">
+                                    <span>State
+                                        :
+                                    </span>
+                                    <strong>
+                                        <t
+                                                t-esc="{'draft': 'Draft', 'request_approve': 'Request Approve', 'approved': 'Approved', 'verified': 'Verified','partially_returned': 'Partially Returned', 'fully_returned': 'Fully Returned','done': 'Done', 'refuse': 'Refuse', 'cancel': 'Cancel', 'transit': 'In Transit'} [doc.state]"/>
+                                    </strong>
+                                </td>
+                            </tr>
+                        </table>
+                        <hr/>
+                        <br/>
+                        <t t-set="is_return" t-value="0"/>
+                        <t t-set="is_balance" t-value="0"/>
+                            <t t-foreach="docs.move_ids"
+                               t-as="line">
+                                <t t-if="line.returned_qty">
+                                    <t t-set="is_return" t-value="1"/>
+                                </t>
+                                <t t-if="line.balance_qty">
+                                    <t t-set="is_balance" t-value="1"/>
+                                </t>
+                            </t>
+                        <table style="width:100%;"
+                               class="table-borderless">
+                            <thead>
+                                <tr>
+                                    <th style="text-align:left;width:55px;">Sl
+                                        .No
+                                    </th>
+                                    <th
+                                            style="text-align:left;font-size:15px;">
+                                        Cat.Code
+                                    </th>
+                                    <th
+                                            style="font-size:15px;width:250px;text-align:left;">
+                                        Item
+                                    </th>
+                                    <th
+                                            style="font-size:15px;">Demand
+                                    </th>
+                                    <th
+                                            style="font-size:15px;">Approved
+                                    </th>
+                                    <th style="font-size:15px;">Issued
+                                    </th>
+                                    <th style="font-size:15px;">
+                                        Received
+                                    </th>
+                                    <th style="font-size:15px;" t-if="is_balance == 1">
+                                        Balance
+                                    </th>
+                                    <th style="font-size:15px;"
+                                        t-if="is_return == 1">
+                                        Returned
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody style="width:100%;">
+                                <t t-set="index" t-value="0"/>
+                                <t t-foreach="doc.move_ids"
+                                   t-as="lines">
+                                    <tr>
+                                        <t t-set="index"
+                                           t-value="index + 1"/>
+                                        <td
+                                                style="text-align:left;padding:10px;font-size:15px;">
+                                            <t t-esc="index"/>
+                                        </td>
+                                        <td
+                                                style="text-align:left;font-size:15px;">
+                                            <t t-esc="lines.product_id.default_code"/>
+                                        </td>
+                                        <td
+                                                style="text-align:left;font-size:15px;">
+                                            <t t-esc="lines.product_id.name"/>
+                                        </td>
+                                        <td
+                                                style="text-align:center;font-size:15px;">
+                                            <t t-esc="'%.0f'%lines.product_uom_qty"/>
+                                        </td>
+                                        <td
+                                                style="text-align:center;font-size:15px;">
+                                            <t t-esc="'%.0f'%lines.quantity"/>
+                                        </td>
+                                        <td style="text-align:center;font-size:15px;">
+                                            <t t-esc="'%.0f'%lines.issued_qty"/>
+                                        </td>
+                                        <td
+                                                style="text-align:center;font-size:15px;">
+                                            <t t-esc="'%.0f'%lines.already_received_qty"/>
+                                        </td>
+                                        <td t-if="is_balance == 1"
+                                                style="text-align:center;font-size:15px;">
+                                            <t
+                                                    t-esc="'%.0f'%lines.balance_qty"/>
+                                        </td>
+                                        <td t-if="is_return == 1"
+                                                style="text-align:center;font-size:15px;">
+                                            <t t-esc="'%.0f'%lines.returned_qty"/>
+                                        </td>
+                                    </tr>
+                                </t>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="footer o_standard_footer"
+                         height="50px">
+                        <div style="width: 100%; margin-top: 20px">
+                            <div class="row last-page">
+                                <div class="col-6 w-50 mw-100 mb-2"
+                                     name="footer_data">
+                                    <div>
+                                        <div class="row">
+                                            <span class="fw-bold">
+                                                Authorised
+                                                By :
+                                                .........................
+                                            </span>
+                                        </div>
+                                        <br/>
+                                    </div>
+                                </div>
+                                <div class="col-6 mw-100 mb-2 w-50">
+                                    <div class="row" name="name"
+                                         style="margin-left:100px;">
+                                        <span class="fw-bold">Received
+                                            By :
+                                            .........................
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <hr/>
+                </t>
+            </t>
+        </t>
+    </template>
+    <!--    Detailed-->
+    <template id="stock_request_pdf_report">
+        <t t-call="web.html_container">
+            <t t-call="ashraf_base.report_custom_external_layout">
+                <t t-foreach="docs" t-as="doc">
+                    <div class="page">
+                        <br/>
+                        <br/>
+                        <table style="width:100%;" class="table-borderless">
+                            <div style="align:right;display: flex;text-align: left;margin-bottom:25px;">
+                                <h1 style="font-size: 25px;align:center;">
+                                    Stock Request:
+                                    <t t-esc="doc.name"/>
+                                </h1>
+                            </div>
+                            <tr>
+                                <td style="padding-top:5px;">
+                                    <span>Operation Type :</span>
+                                    <strong>
+                                        <t t-esc="doc.picking_type_id.name"/>
+                                    </strong>
+                                </td>
+                                <td>
+                                    <span>Date :</span>
+                                    <strong>
+                                        <t t-esc="doc.date.strftime('%d/%m/%Y')"/>
+                                    </strong>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="padding-top:5px;">
+                                    <span>From Dept :</span>
+                                    <strong>
+                                        <t t-esc="doc.from_department_id.name"/>
+                                    </strong>
+                                </td>
+                                <td t-if="doc.issued_date">
+                                    <span>Issue Date
+                                        :
+                                    </span>
+                                    <strong>
+                                        <t t-esc="doc.issued_date.strftime('%d/%m/%Y')"
+                                        />
+                                    </strong>
+                                </td>
+                                <td t-if="not doc.issued_date">
+                                    <span>Requested By :</span>
+                                    <strong>
+                                        <t t-esc="doc.request_by.name"/>
+                                    </strong>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="padding-top:5px;">
+                                    <span>To Dept :</span>
+                                    <strong>
+                                        <t t-esc="doc.to_department_id.name"/>
+                                    </strong>
+                                </td>
+                                <td t-if="doc.received_date">
+                                    <span>Received Date
+                                        :
+                                    </span>
+                                    <strong t-if="doc.received_date">
+                                        <t t-esc="doc.received_date.strftime('%d/%m/%Y')"
+                                        />
+                                    </strong>
+                                </td>
+                                <td style="padding-top:5px;"
+                                    t-if="not doc.received_date">
+                                    <span>Approved By :</span>
+                                    <strong>
+                                        <t t-esc="doc.approved_by.name"
+                                        />
+                                    </strong>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="padding-top:5px;">
+                                    <span>State :</span>
+                                    <strong>
+                                        <t t-esc="{'draft': 'Draft', 'request_approve': 'Request Approve', 'approved': 'Approved', 'verified': 'Verified','partially_returned': 'Partially Returned', 'fully_returned': 'Fully Returned','done': 'Done', 'refuse': 'Refuse', 'cancel': 'Cancel', 'transit': 'In Transit'} [doc.state]"/>
+                                    </strong>
+                                </td>
+                                <td t-if="doc.issued_date">
+                                    <span>Requested By :</span>
+                                    <strong>
+                                        <t t-esc="doc.request_by.name"/>
+                                    </strong>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td style="padding-top:5px;"
+                                    t-if="doc.received_date">
+                                    <span>Approved By :</span>
+                                    <strong>
+                                        <t t-esc="doc.approved_by.name"
+                                        />
+                                    </strong>
+                                </td>
+                            </tr>
+                        </table>
+                        <hr/>
+                        <br/>
+                        <table style="width:100%;"
+                               class="table-borderless">
+                            <thead>
+                                <tr>
+                                    <th style="text-align:left;width:55px;">Sl
+                                        .No
+                                    </th>
+                                    <th style="text-align:left;font-size:15px;">
+                                        Cat.Code
+                                    </th>
+                                    <th style="font-size:15px;width:600px;text-align:left;">
+                                        Item
+                                    </th>
+                                    <th style="font-size:15px;">Demand</th>
+                                    <th style="font-size:15px;">Approved</th>
+                                    <th style="font-size:15px;">Done</th>
+                                    <th style="font-size:15px;">Received</th>
+                                </tr>
+                            </thead>
+                            <tbody style="width:100%;">
+                                <t t-set="index" t-value="0"/>
+                                <t t-foreach="doc.move_ids"
+                                   t-as="lines">
+                                    <tr style="width:100%;">
+                                        <t t-set="index" t-value="index + 1"/>
+                                        <td style="text-align:left;padding:10px;font-size:15px;">
+                                            <b>
+                                                <t t-esc="index"/>
+                                            </b>
+                                        </td>
+                                        <td style="text-align:left;width:110px;font-size:15px;">
+                                            <b>
+                                                <t t-esc="lines.product_id.default_code"/>
+                                            </b>
+                                        </td>
+                                        <td style="text-align:left;width:150px;font-size:15px;">
+                                            <b>
+                                                <t t-esc="lines.product_id.name"/>
+                                            </b>
+                                        </td>
+                                        <td style="text-align:center;width:85px;font-size:15px;">
+                                            <b>
+                                                <t t-esc="'%.0f'%lines.product_uom_qty"/>
+                                            </b>
+                                        </td>
+                                        <td style="text-align:center;width:85px;font-size:15px;">
+                                            <b>
+                                                <t t-esc="lines.quantity"/>
+                                            </b>
+                                        </td>
+                                        <td style="text-align:center;width:85px;font-size:15px;">
+                                            <b>
+                                                <t
+                                                        t-esc="'%.0f'%lines.issued_qty"
+                                                        t-if="doc.state in ['transit', 'done', 'refuse','cancel']"/>
+                                                <span
+                                                        t-if="doc.state in ['draft', 'request_approve', 'approved']">
+                                                    0
+                                                </span>
+                                            </b>
+                                        </td>
+                                        <td style="text-align:center;width:85px;font-size:15px;">
+                                            <b>
+                                                <t t-esc="lines.already_received_qty"/>
+                                            </b>
+                                        </td>
+                                    </tr>
+
+                                    <!--                                    Stock transfer-->
+                                    <tr style="width:100%;"
+                                        t-if="doc.transfer_ids">
+                                        <th style="padding:10px;width:55px;font-size:15px;">
+                                            Sl No.
+                                        </th>
+                                        <th style="width:500px;font-size:14px;text-align:center;">
+                                            Transfer
+                                        </th>
+                                        <th style="width:250px;font-size:15px;text-align:center;">
+                                            Date
+                                        </th>
+                                        <th style="width:1000px;font-size:15px;text-align:center;">
+                                            Source
+                                        </th>
+                                        <th style="width:1000px;font-size:15px;text-align:center;">
+                                            Destination
+                                        </th>
+                                        <th style="font-size:15px;text-align:center;">
+                                            Qty
+                                        </th>
+                                    </tr>
+                                    <t t-set="index1" t-value="0"/>
+                                    <t t-foreach="doc.transfer_ids.filtered(lambda x:x.state == 'done').move_line_ids.filtered(lambda l:l.product_id.id == lines.product_id.id)"
+                                       t-as="transfer">
+                                        <tr t-if="doc.transfer_ids">
+                                            <t t-set="index1"
+                                               t-value="index1 + 1"/>
+                                            <td style="text-align:center;padding:5px;font-size:14px;">
+                                                <t t-esc="index1"/>
+                                            </td>
+                                            <td style="font-size:14px;">
+                                                <t t-esc="transfer.picking_id.name"/>
+                                            </td>
+                                            <td style="font-size:14px;">
+                                                <t t-esc="transfer.picking_id.date_done.strftime('%d/%m/%Y')"/>
+                                            </td>
+                                            <td style="font-size:14px;">
+                                                <t t-if="transfer.picking_id.location_id.usage == 'transit'">
+                                                    <t t-esc="transfer.picking_id.location_id.display_name"/>
+                                                </t>
+                                                <t t-else="">
+                                                    <t t-esc="transfer.picking_id.department_id.name"/>
+                                                    /
+                                                    <t t-esc="transfer.picking_id.location_id.name"/>
+                                                </t>
+                                            </td>
+                                            <td style="font-size:14px;">
+                                                <t t-if="transfer.picking_id.location_dest_id.usage == 'transit'">
+                                                    <t t-esc="transfer.picking_id.location_dest_id.display_name"/>
+                                                </t>
+                                                <t t-else="">
+                                                    <t t-esc="transfer.picking_id.department_id.name"/>
+                                                    /
+                                                    <t t-esc="transfer.picking_id.location_dest_id.name"/>
+                                                </t>
+                                            </td>
+                                            <td style="font-size:14px;text-align:center;">
+                                                <t t-esc="transfer.quantity"/>
+                                            </td>
+                                        </tr>
+                                    </t>
+                                </t>
+                            </tbody>
+                        </table>
+                    </div>
+                    <br/>
+                    <br/>
+                    <br/>
+                    <br/>
+                    <br/>
+                    <br/>
+                    <hr/>
+                </t>
+            </t>
+        </t>
+    </template>
+    <!--    Dot Matrix report-->
+    <template id="stock_request_pdf_report_dotmatrix">
+        <t t-call="web.html_container">
+            <t t-call="web.basic_layout">
+                <t t-foreach="docs" t-as="o">
+                    <div class="page">
+                        <div style="align:right;display: flex;text-align: left;margin-top:5px;">
+                            <h1 style="font-size: 25px;align:center;">
+                                Stock Request:
+                                <t t-esc="o.name"/>
+                            </h1>
+                        </div>
+                        <table style="width:100%;"
+                               class="table-borderless">
+                            <tr>
+                                <td style="padding-top:5px;">
+                                    <span>Operation Type
+                                        :
+                                    </span>
+                                    <strong>
+                                        <t t-esc="o.picking_type_id.name"
+                                        />
+                                    </strong>
+                                </td>
+                                <td>
+                                    <span>Date
+                                        :
+                                    </span>
+                                    <strong>
+                                        <t
+                                                t-esc="o.date.strftime('%d/%m/%Y')"
+                                        />
+                                    </strong>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="padding-top:5px;">
+                                    <span>From Dept
+                                        :
+                                    </span>
+                                    <strong>
+                                        <t t-esc="o.from_department_id.name"/>
+                                    </strong>
+                                </td>
+                                <td>
+                                    <span>Issue Date
+                                        :
+                                    </span>
+                                    <strong t-if="o.issued_date">
+                                        <t t-esc="o.issued_date.strftime('%d/%m/%Y')"
+                                        />
+                                    </strong>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="padding-top:5px;">
+                                    <span>To Dept
+                                        :
+                                    </span>
+                                    <strong>
+                                        <t t-esc="o.to_department_id.name"/>
+                                    </strong>
+                                </td>
+                                <td>
+                                    <span>Received Date
+                                        :
+                                    </span>
+                                    <strong t-if="o.received_date">
+                                        <t t-esc="o.received_date.strftime('%d/%m/%Y')"
+                                        />
+                                    </strong>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="padding-top:5px;">
+                                    <span>State
+                                        :
+                                    </span>
+                                    <strong>
+                                        <t
+                                                t-esc="{'draft': 'Draft', 'request_approve': 'Request Approve', 'approved': 'Approved', 'verified': 'Verified','partially_returned': 'Partially Returned', 'fully_returned': 'Fully Returned','done': 'Done', 'refuse': 'Refuse', 'cancel': 'Cancel', 'transit': 'In Transit'} [o.state]"/>
+                                    </strong>
+
+
+                                </td>
+                                <td>
+                                    <span>Requested By :</span>
+                                    <strong>
+                                        <t t-esc="o.request_by.name"/>
+                                    </strong>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+
+                                </td>
+                                <td style="padding-top:5px;">
+                                    <span>Approved By :</span>
+                                    <strong>
+                                        <t t-esc="o.approved_by.name"
+                                        />
+                                    </strong>
+                                </td>
+                            </tr>
+                        </table>
+                        <hr/>
+                        <br/>
+                        <table style="width:100%;"
+                               class="table-borderless">
+                            <thead>
+                                <tr>
+                                    <th style="text-align:left;width:55px;">Sl
+                                        .No
+                                    </th>
+                                    <th
+                                            style="text-align:left;font-size:15px;">
+                                        Cat.Code
+                                    </th>
+                                    <th
+                                            style="font-size:15px;width:600px;text-align:left;">
+                                        Item
+                                    </th>
+                                    <th
+                                            style="font-size:15px;">Demand
+                                    </th>
+                                    <th
+                                            style="font-size:15px;">Approved
+                                    </th>
+                                    <th style="font-size:15px;">Done
+                                    </th>
+                                    <th style="font-size:15px;">
+                                        Received
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody style="width:100%;">
+                                <t t-set="index" t-value="0"/>
+                                <t t-foreach="o.move_ids"
+                                   t-as="lines">
+                                    <tr style="width:100%;">
+                                        <t t-set="index"
+                                           t-value="index + 1"/>
+                                        <td
+                                                style="text-align:left;padding:10px;font-size:15px;">
+                                            <b>
+                                                <t t-esc="index"/>
+                                            </b>
+                                        </td>
+                                        <td
+                                                style="text-align:left;width:110px;font-size:15px;">
+                                            <b>
+                                                <t t-esc="lines.product_id.default_code"/>
+                                            </b>
+                                        </td>
+                                        <td
+                                                style="text-align:left;width:150px;font-size:15px;">
+                                            <b>
+                                                <t t-esc="lines.product_id.name"/>
+                                            </b>
+                                        </td>
+                                        <td
+                                                style="text-align:center;width:85px;font-size:15px;">
+                                            <b>
+                                                <t t-esc="'%.0f'%lines.product_uom_qty"/>
+                                            </b>
+                                        </td>
+                                        <td
+                                                style="text-align:center;width:85px;font-size:15px;">
+                                            <b>
+                                                <t t-esc="lines.quantity"/>
+                                            </b>
+                                        </td>
+                                        <td style="text-align:center;width:85px;font-size:15px;">
+                                            <b>
+                                                <t
+                                                        t-esc="'%.0f'%lines.issued_qty"
+                                                        t-if="o.state in ['transit', 'done', 'refuse','cancel']"/>
+                                                <span
+                                                        t-if="o.state in ['draft', 'request_approve', 'approved']">
+                                                    0
+                                                </span>
+                                            </b>
+                                        </td>
+                                        <td
+                                                style="text-align:center;width:85px;font-size:15px;">
+                                            <b>
+                                                <t t-esc="lines.already_received_qty"/>
+                                            </b>
+                                        </td>
+                                    </tr>
+                                    <tr style="width:100%;"
+                                        t-if="o.transfer_ids">
+                                        <th
+                                                style="padding:10px;width:55px;font-size:15px;">
+                                            Sl No.
+                                        </th>
+                                        <th
+                                                style="width:500px;font-size:14px;text-align:center;">
+                                            Transfer
+                                        </th>
+                                        <th
+                                                style="width:250px;font-size:15px;text-align:center;">
+                                            Date
+                                        </th>
+                                        <th
+                                                style="width:1000px;font-size:15px;text-align:center;">
+                                            Source
+                                        </th>
+                                        <th
+                                                style="width:1000px;font-size:15px;text-align:center;">
+                                            Destination
+                                        </th>
+                                        <th
+                                                style="font-size:15px;text-align:center;">
+                                            Qty
+                                        </th>
+                                    </tr>
+                                    <t t-set="index1" t-value="0"/>
+
+                                    <t
+                                            t-foreach="o.transfer_ids.filtered(lambda x:x.state == 'done').move_line_ids.filtered(lambda l:l.product_id.id == lines.product_id.id)"
+                                            t-as="transfer">
+                                        <tr t-if="o.transfer_ids">
+                                            <t t-set="index1"
+                                               t-value="index1 + 1"/>
+                                            <td
+                                                    style="text-align:center;padding:5px;font-size:14px;">
+                                                <t t-esc="index1"/>
+                                            </td>
+                                            <td style="font-size:14px;">
+                                                <t
+                                                        t-esc="transfer.picking_id.name"/>
+                                            </td>
+                                            <td style="font-size:14px;">
+                                                <t
+                                                        t-esc="transfer.picking_id.date_done.strftime('%d/%m/%Y')"/>
+                                            </td>
+
+                                            <td style="font-size:14px;">
+                                                <t
+                                                        t-if="transfer.picking_id.location_id.usage == 'transit'">
+                                                    <t
+                                                            t-esc="transfer.picking_id.location_id.display_name"/>
+                                                </t>
+                                                <t t-else="">
+                                                    <t
+                                                            t-esc="transfer.picking_id.department_id.name"/>
+                                                    /
+                                                    <t
+                                                            t-esc="transfer.picking_id.location_id.name"/>
+                                                </t>
+                                            </td>
+                                            <td style="font-size:14px;">
+                                                <t
+                                                        t-if="transfer.picking_id.location_dest_id.usage == 'transit'">
+                                                    <t
+                                                            t-esc="transfer.picking_id.location_dest_id.display_name"/>
+                                                </t>
+                                                <t t-else="">
+                                                    <t
+                                                            t-esc="transfer.picking_id.department_id.name"/>
+                                                    /
+                                                    <t
+                                                            t-esc="transfer.picking_id.location_dest_id.name"/>
+                                                </t>
+                                            </td>
+                                            <td style="font-size:14px;text-align:center;">
+                                                <t
+                                                        t-esc="transfer.quantity"/>
+                                            </td>
+                                        </tr>
+                                    </t>
+                                </t>
+                            </tbody>
+                        </table>
+                    </div>
+                    <br/>
+                    <br/>
+                    <br/>
+                    <br/>
+                    <br/>
+                    <br/>
+                    <hr/>
+                </t>
+            </t>
+        </t>
+    </template>
+</odoo>

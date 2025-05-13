@@ -1,0 +1,267 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <!--    material request menu-->
+    <record id="material_request_menu_action"
+            model="ir.actions.act_window">
+        <field name="name">Material Request</field>
+        <field name="res_model">material.request</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+    <!--material requests tree view-->
+    <record id="material_request_view_tree" model="ir.ui.view">
+        <field name="name">material.request.tree</field>
+        <field name="model">material.request</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name"/>
+                <field name="date" optional="hide"/>
+                <field name="issue_type_id"/>
+                <field name="issue_date"/>
+                <field name="customer_id"/>
+                <field name="employee_id" optional="hide"/>
+                <field name="sales_person_id"/>
+                <field name="location_id"/>
+                <field name="department_id" optional="hide"/>
+                <field name="division_id" optional="hide"/>
+                <field name="state" decoration-primary="state == 'draft'"
+                       decoration-info="state == 'request_approve'"
+                       decoration-success="state == 'done'"
+                       decoration-danger="state == 'cancel'"
+                       decoration-warning="state == 'approved'"
+                       decoration-bf="state == 'transit'"
+                       widget="badge" optional="show"/>
+            </tree>
+        </field>
+    </record>
+    <!--Material request form view-->
+    <record id="material_request_view_form" model="ir.ui.view">
+        <field name="name">material.request.form</field>
+        <field name="model">material.request</field>
+        <field name="arch" type="xml">
+            <form string="Material Request">
+                <header>
+                    <field name="state" widget="statusbar"
+                           statusbar_visible="draft,transit,done"/>
+                    <button name="action_request_approve"
+                            string="Request Approve"
+                            type="object"
+                            class="btn-primary"
+                            invisible="state != 'draft'"/>
+                    <button name="action_verify_done_quantity"
+                            string="Verify Quantity"
+                            type="object"
+                            class="btn-primary"
+                            invisible="state != 'approved'"
+                            groups="material_stock_request.inventory_store_auditor"/>
+                    <button name="action_approve" string="Approve"
+                            type="object"
+                            class="btn-primary"
+                            invisible="state != 'request_approve' or is_material_department_approval_requested == True or is_qty_verified == False"
+                            groups="material_stock_request.inventory_store_manger"/>
+                    <button name="product_transfer" string="Issued Product"
+                            type="object"
+                            class="btn-primary"
+                            invisible="state != 'verified' or is_qty_verified == False"
+                            groups="material_stock_request.inventory_store_manger"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_transfer" type="object" icon="fa-truck"
+                                class="oe_stat_button"
+                                invisible="state not in ('transit','done','fully_returned','partially_returned'),">
+                            <div class="o_field_widget o_stat_info">
+                                <span class="o_stat_value d-flex gap-1" style="color:#993333" invisible="not is_delivery_pending">
+                                    Pending
+                                </span>
+                                <span class="o_stat_text">Stock Transfer</span>
+                            </div>
+                        </button>
+                        <button name="action_requested_approvals" type="object"
+                                string="Approvals"
+                                class="oe_stat_button" icon="fa-check"
+                                invisible="is_material_department_approval_requested == False"/>
+                        <button name="action_view_journal_entries" type="object"
+                                string="Journal Entries"
+                                class="oe_stat_button" icon="fa-align-justify"
+                                invisible="show_entries == False" groups="account.group_account_user"/>
+                    </div>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" readonly="1"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="department_id"/>
+                            <field name="division_id"/>
+                            <field name="picking_type_id"/>
+                            <field name="customer_id"/>
+                            <field name="employee_id"/>
+                            <field name="issue_type_id"/>
+                            <field name="is_contract" invisible="1"/>
+                        </group>
+                        <group>
+                            <field name="date"
+                                   readonly="state not in 'draft'"/>
+                            <field name="issue_date" required="state == 'done'"/>
+                            <field name="sales_person_id"/>
+                            <field name="location_id"/>
+                            <field name="journal_id"/>
+                            <field name="remarks"/>
+                            <field name="is_material_department_approval_requested" invisible="1"/>
+                            <field name="is_department_approved" invisible="1"/>
+                            <field name="is_finance_approved" invisible="1"/>
+                            <field name="is_qty_verified" invisible="1"/>
+                            <field name="is_approval_active" invisible="1"/>
+                            <field name="is_done_qty_readonly" invisible="1"/>
+                            <field name="is_qty_approved" invisible="1"/>
+                            <field name="is_delivery_pending" invisible="1"/>
+                            <field name="show_entries" invisible="1"/>
+                            <field name="requested_approvals_ids" invisible="1" widget="many2many_tags"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Operations">
+                            <field name="move_ids" readonly="state != 'draft'">
+                                <tree editable="bottom">
+                                    <field name="sequence_number"/>
+                                    <field name="product_id"
+                                           readonly="parent.state not in 'draft'"/>
+                                    <field name="remark"/>
+                                    <field name="available_qty"/>
+                                    <field name="location_available_qty"/>
+                                    <field name="product_uom_category_id"
+                                           column_invisible="1"/>
+                                    <field name="unit_cost" groups="account.group_account_user"/>
+                                    <field name="product_uom"
+                                           readonly="parent.state not in 'draft'"/>
+                                    <field name="product_uom_qty"
+                                           readonly="parent.state not in 'draft'"/>
+                                    <field name="approved_quantity"
+                                           readonly="parent.state not in ('draft','request_approve') or (parent.is_qty_verified == True and parent.is_qty_approved == True)"
+                                           column_invisible="parent.state in ('draft')"
+                                    />
+                                    <field name="quantity"
+                                           readonly="parent.is_qty_verified == True and parent.is_done_qty_readonly == False and parent.state in ('approved','done')"
+                                           column_invisible="parent.state in ('draft','request_approve')"
+                                    />
+                                    <field name="full_or_partial_return" column_invisible="1"/>
+                                    <field name="returned_quantity" readonly="1" optional="1" groups="account.group_account_user"/>
+                                    <field name="total_cost" groups="account.group_account_user"/>
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
+                    <div class="o_inner_group grid oe_subtotal_footer col-lg-4"
+                         style="width: 196px;" groups="account.group_account_user">
+                        <label for="total_cost_amount"
+                               string="Total Cost"
+                               invisible="total_cost_amount == 0"/>
+                        <field name="total_cost_amount" widget='monetary'
+                               options="{'currency_field': 'currency_id'}"
+                               readonly="1"
+                               invisible="total_cost_amount == 0"/>
+                    </div>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+    <!--    search view-->
+    <record id="material_request_view_search" model="ir.ui.view">
+        <field name="name">material.stock.view.search</field>
+        <field name="model">material.request</field>
+        <field name="arch" type="xml">
+            <search string="Material Request Search">
+                <field name="name" string="Name"/>
+                <field name="state" string="State"/>
+                <field name="issue_type_id" string="Issue Type"/>
+                <field name="picking_type_id" string="Operation Type"/>
+                <field name="sales_person_id" string="Salesperson"/>
+                <field name="customer_id" string="Customer"/>
+                <field name="employee_id" string="Employee"/>
+                <field name="location_id" string="Source Location"/>
+                <field name="department_id" string="Department"/>
+                <field name="remarks" string="Remarks"/>
+                <field name="move_ids" string="Product"
+                       filter_domain="[('move_ids.product_id', 'ilike', self)]"/>
+                <filter string="Salesperson" name="salesperson"
+                        context="{'group_by':'sales_person_id'}"/>
+                <filter string="Issue Type" name="Issue"
+                        context="{'group_by':'issue_type_id'}"/>
+                <filter string="Customer" name="customer"
+                        context="{'group_by':'customer_id'}"/>
+                <filter string="Employee" name="employee"
+                        context="{'group_by':'employee_id'}"/>
+                <filter string="State" name="state"
+                        context="{'group_by':'state'}"/>
+                <group expand="0" string="Group By">
+                    <filter string="Division" name="division"
+                            context="{'group_by':'division_id'}"/>
+                    <filter string="Department" name="department"
+                            context="{'group_by':'department_id'}"/>
+                </group>
+                <filter string="Draft" name="draft"
+                        domain="[('state', '=', 'draft')]"/>
+                <filter string="Request Approve" name="request_approve"
+                        domain="[('state', '=', 'request_approve')]"/>
+                <filter string="Approved" name="approved"
+                        domain="[('state', '=', 'approved')]"/>
+                <filter string="Verified" name="verified"
+                        domain="[('state', '=', 'verified')]"/>
+                <filter string="Done" name="done"
+                        domain="[('state', '=', 'done')]"/>
+                <filter string="Partially Returned" name="done"
+                        domain="[('state', '=', 'partially_returned')]"/>
+                <filter string="Fully Returned" name="done"
+                        domain="[('state', '=', 'fully_returned')]"/>
+                <filter string="Refused" name="refused"
+                        domain="[('state', '=', 'refused')]"/>
+                <filter string="Cancel" name="cancel"
+                        domain="[('state', '=', 'cancel')]"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="coordinator_stock_request_menu_action"
+            model="ir.actions.act_window">
+        <field name="name">Stock Request</field>
+        <field name="res_model">stock.request</field>
+        <field name="view_mode">tree,form</field>
+<!--        <field name="context">{'default_is_pos_stock_request': True}</field>-->
+    </record>
+
+    <record id="coordinator_material_request_menu_action"
+            model="ir.actions.act_window">
+        <field name="name">Material Request</field>
+        <field name="res_model">material.request</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <menuitem id="menu_coordinator_management" name="Inventory"
+              parent="purchase.menu_purchase_root" sequence="10"/>
+
+
+    <menuitem
+            id="menu_material_request_coordinator"
+            name="Material Request"
+            parent="menu_coordinator_management"
+            action="coordinator_material_request_menu_action"
+            sequence="999"/>
+<!--    Menu action-->
+    <menuitem
+        id="menu_stock_request_coordinator"
+        name="Stock Request"
+        parent="menu_coordinator_management"
+        action="coordinator_stock_request_menu_action"
+        sequence="999"/>
+
+    <menuitem id="menu_material_request"
+              name="Material Request"
+              parent="stock.menu_stock_transfers"
+              action="material_request_menu_action"
+              sequence="45"/>
+</odoo>

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="hr_division_department.stock_picking_rule" model="ir.rule">
+        <field name="name">Stock Picking Rule</field>
+        <field name="model_id" ref="model_stock_picking"/>
+        <field name="domain_force">['|','|',('department_id', 'in', user.department_ids.ids),('department_id', '=', False),('stock_request_user_ids', 'in', user.ids)]</field>
+        <field name="groups"
+               eval="[(4, ref('base.group_user'))]"/>
+    </record>
+</odoo>

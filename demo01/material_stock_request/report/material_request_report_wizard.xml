@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="material_request_report_wizard_form" model="ir.ui.view">
+        <field name="name">material.request.report.wizard.view.form</field>
+        <field name="model">material.request.report.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Material Request Report">
+                <group>
+                    <field name="report_type" widget="radio"/>
+                    <field name="cost_type" widget="radio" invisible="1"/>
+                    <label for="from_date" string="Period"/>
+                    <div class="o_row">
+                        <field name="from_date" widget="daterange" nolabel="1"
+                               class="oe_inline"
+                               options="{'related_end_date': 'to_date'}"/>
+                        <i class="fa fa-long-arrow-right mx-2"
+                           aria-label="Arrow icon" title="Arrow"/>
+                        <field name="to_date" widget="daterange" nolabel="1"
+                               class="oe_inline"
+                               options="{'related_start_date': 'from_date'}"/>
+                    </div>
+                    <field name="department_ids" widget="many2many_tags"/>
+                    <field name="partner_id"/>
+                    <field name="state"/>
+                    <field name="issue_type_id"/>
+                    <field name="user_id"/>
+                    <field name="material_request_ids"
+                           widget="many2many_tags" invisible="1"/>
+                    <field name="material_request_id"/>
+                </group>
+                <footer>
+                    <button name="action_material_request_report" string="Print" type="object" class="btn-primary"/>
+                    <button string="Cancel" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+    <record id="action_material_request_report" model="ir.actions.act_window">
+        <field name="name">Material Request Report</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">material.request.report.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="context">{'default_cost_type':'without_cost'}</field>
+        <field name="view_id" ref="material_request_report_wizard_form"/>
+        <field name="target">new</field>
+    </record>
+    <menuitem id="menu_material_request_report_wizard"
+              name="Material Request Report" parent="stock.menu_warehouse_report"
+              action="action_material_request_report"
+              groups="sales_team.group_sale_manager"
+              sequence="57"/>
+    <record id="action_material_request_report_with_cost"
+            model="ir.actions.act_window">
+        <field name="name">Material Request Report</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">material.request.report.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="context">{'default_cost_type':'with_cost'}</field>
+        <field name="view_id" ref="material_request_report_wizard_form"/>
+        <field name="target">new</field>
+    </record>
+    <menuitem id="menu_material_request_report_with_cost_wizard"
+              name="Material Request With Cost Report"
+              parent="stock.menu_warehouse_report"
+              action="action_material_request_report_with_cost"
+              groups="sales_team.group_sale_manager"
+              sequence="58"/>
+</odoo>

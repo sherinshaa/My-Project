@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="inventory_store_manger" model="res.groups">
+        <field name="name">Store Manger</field>
+    </record>
+    <record id="inventory_store_auditor" model="res.groups">
+        <field name="name">Store Auditor</field>
+    </record>
+</odoo>

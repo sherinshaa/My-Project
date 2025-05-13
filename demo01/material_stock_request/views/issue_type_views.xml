@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!--   issue_type action-->
+    <record id="issue_type_action" model="ir.actions.act_window">
+        <field name="name">Issue Type</field>
+        <field name="res_model">issue.type</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <!--    issue_type view tree -->
+    <record id="issue_type_view_tree" model="ir.ui.view">
+        <field name="name">issue.type.view.tree</field>
+        <field name="model">issue.type</field>
+        <field name="priority" eval="8"/>
+        <field name="arch" type="xml">
+            <tree string="Issue Type">
+                <field name="name"/>
+                <field name="expense_account_id"/>
+                <field name="company_id"/>
+            </tree>
+        </field>
+    </record>
+
+    <!--    issue_type view form -->
+    <record id="issue_type_view_form" model="ir.ui.view">
+        <field name="name">issue.type.view.form</field>
+        <field name="model">issue.type</field>
+        <field name="priority" eval="8"/>
+        <field name="arch" type="xml">
+            <form string="Issue Type">
+                <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" style="width: 50%%;"
+                                   placeholder="Issue Type"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group style="margin-top:2px;">
+                            <field name="company_id"/>
+                        </group>
+                        <group>
+                                <field name="expense_account_id"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Description">
+                            <field name="note"/>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!--    issue_type parent_menu-->
+    <menuitem id="menu_transfers_config"
+              name="Material Request"
+              parent="stock.menu_stock_config_settings"
+              sequence="110"/>
+    <!--    issue_type menu-->
+    <menuitem id="issue_type_menu"
+              name="Issue Type"
+              parent="material_stock_request.menu_transfers_config"
+              sequence="1"
+              action="issue_type_action"/>
+</odoo>

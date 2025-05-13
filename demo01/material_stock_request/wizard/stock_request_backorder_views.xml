@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+        <record id="stock_request_backorder_view_form" model="ir.ui.view">
+            <field name="name">stock.request.backorder.view.form</field>
+            <field name="model">stock.request.backorder</field>
+            <field name="arch" type="xml">
+                <form string="Create a Backorder">
+                    <group>
+                        <p colspan="2">
+                            Create a backorder if you expect to process the remaining products later. Do not create a backorder if you will not process the remaining products.
+                        </p>
+                    </group>
+                    <field name="stock_request_id" invisible="1"/>
+                    <footer>
+                        <button name="action_stock_request_backorder"
+                                string="Create backorder" data-hotkey="q"
+                            colspan="1" type="object" class="btn-primary"/>
+                        <button name="action_no_stock_request_backorder"
+                                type="object" string="No Backorder"
+                                data-hotkey="w"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+</odoo>

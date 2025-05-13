@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="action_report_material_request_template" model="ir.actions.report">
+        <field name="name">Material Request Report</field>
+        <field name="model">material.request</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">material_stock_request.report_material_request</field>
+        <field name="report_file">material_stock_request.report_material_request</field>
+        <field name="print_report_name">'Material Request Report - %s' % (object.name)</field>
+        <field name="binding_type">report</field>
+        <field name="paperformat_id" ref="material_stock_request.paperformat_ashraf_a4_paper_material_stock_request"/>
+    </record>
+<!--    Material request Reports-->
+    <record id="material_request_report" model="ir.actions.report">
+        <field name="name">Material Request With Cost</field>
+        <field name="model">material.request</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">material_stock_request.material_stock_request_report</field>
+        <field name="report_file">material_stock_request.material_stock_request_report</field>
+        <field name="print_report_name">'Material Request Report - %s' % (object.name)</field>
+        <field name="paperformat_id" ref="material_stock_request.paperformat_ashraf_a4_paper_material_stock_request"/>
+        <field name="binding_model_id" ref="material_stock_request.model_material_request"/>
+        <field name="binding_type">report</field>
+    </record>
+    <record id="material_request_report_without_cost" model="ir.actions.report">
+        <field name="name">Material Request Without Cost</field>
+        <field name="model">material.request</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">material_stock_request.material_stock_request_report_without_cost</field>
+        <field name="report_file">material_stock_request.material_stock_request_report_without_cost</field>
+        <field name="print_report_name">'Material Request Report - %s' % (object.name)</field>
+        <field name="paperformat_id" ref="material_stock_request.paperformat_ashraf_a4_paper_material_stock_request"/>
+        <field name="binding_model_id" ref="material_stock_request.model_material_request"/>
+        <field name="binding_type">report</field>
+    </record>
+<!--   Material request Dot matrix report-->
+    <record id="material_request_report_dotmatrix" model="ir.actions.report">
+        <field name="name">Material Request With Cost (Dot Matrix)</field>
+        <field name="model">material.request</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">material_stock_request.material_stock_request_report_dotmatrix</field>
+        <field name="report_file">material_stock_request.material_stock_request_report_dotmatrix</field>
+        <field name="print_report_name">'Material Request Report - %s' % (object.name)</field>
+        <field name="paperformat_id" ref="material_stock_request.paperformat_dot_matrix_printer_material_request"/>
+        <field name="binding_model_id" ref="material_stock_request.model_material_request"/>
+        <field name="binding_type">report</field>
+    </record>
+    <record id="material_request_report_without_cost_dotmatrix" model="ir.actions.report">
+        <field name="name">Material Request Without Cost (Dot Matrix)</field>
+        <field name="model">material.request</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">material_stock_request.material_stock_request_report_without_cost_dotmatrix</field>
+        <field name="report_file">material_stock_request.material_stock_request_report_without_cost_dotmatrix</field>
+        <field name="print_report_name">'Material Request Report - %s' % (object.name)</field>
+        <field name="paperformat_id" ref="material_stock_request.paperformat_dot_matrix_printer_material_request"/>
+        <field name="binding_model_id" ref="material_stock_request.model_material_request"/>
+        <field name="binding_type">report</field>
+    </record>
+<!--    Stock request reports-->
+    <record id="stock_request_report_summary" model="ir.actions.report">
+        <field name="name">Stock Request Summary</field>
+        <field name="model">stock.request</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">material_stock_request.stock_request_pdf_report_summary</field>
+        <field name="report_file">material_stock_request.stock_request_pdf_report_summary</field>
+        <field name="print_report_name">'Stock Request Report - %s' % (object.name)</field>
+        <field name="paperformat_id" ref="material_stock_request.paperformat_ashraf_a4_paper_material_stock_request"/>
+        <field name="binding_model_id" ref="material_stock_request.model_stock_request"/>
+        <field name="binding_type">report</field>
+    </record>
+    <record id="stock_request_report_summary_dot_matrix"
+            model="ir.actions.report">
+    <field name="name">Stock Request Summary: Dot-Matrix</field>
+    <field name="model">stock.request</field>
+    <field name="report_type">qweb-pdf</field>
+    <field name="report_name">material_stock_request.stock_request_pdf_report_summary_dot_matrix</field>
+    <field name="report_file">material_stock_request.stock_request_pdf_report_summary_dot_matrix</field>
+    <field name="print_report_name">'Stock Request Report:Dot-Matrix - %s' % (object.name)</field>
+    <field name="paperformat_id" ref="material_stock_request.paperformat_dot_matrix_printer_material_request"/>
+    <field name="binding_model_id" ref="material_stock_request.model_stock_request"/>
+    <field name="binding_type">report</field>
+</record>
+    <record id="stock_request_report" model="ir.actions.report">
+        <field name="name">Stock Request Detailed</field>
+        <field name="model">stock.request</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">material_stock_request.stock_request_pdf_report</field>
+        <field name="report_file">material_stock_request.stock_request_pdf_report</field>
+        <field name="print_report_name">'Stock Request Report - %s' % (object.name)</field>
+        <field name="paperformat_id" ref="material_stock_request.paperformat_ashraf_a4_paper_material_stock_request"/>
+        <field name="binding_model_id" ref="material_stock_request.model_stock_request"/>
+        <field name="binding_type">report</field>
+    </record>
+    <record id="stock_request_report_dotmatrix" model="ir.actions.report">
+        <field name="name">Stock Request Report (Dot Matrix)</field>
+        <field name="model">stock.request</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">material_stock_request.stock_request_pdf_report_dotmatrix</field>
+        <field name="report_file">material_stock_request.stock_request_pdf_report_dotmatrix</field>
+        <field name="print_report_name">'Stock Request Report - %s' % (object.name)</field>
+        <field name="paperformat_id" ref="material_stock_request.paperformat_dot_matrix_printer_material_request"/>
+        <field name="binding_model_id" ref="material_stock_request.model_stock_request"/>
+        <field name="binding_type">report</field>
+    </record>
+    <record id="action_stock_request_transfer_report" model="ir.actions.report">
+            <field name="name">Picking Operation-Stock Request</field>
+            <field name="model">stock.picking</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">material_stock_request.report_stock_picking_transfers</field>
+            <field name="report_file">material_stock_request.report_stock_picking_transfers</field>
+            <field name="print_report_name">'Picking Operations - %s - %s' % (object.partner_id.name or '', object.name)</field>
+            <field name="binding_model_id" ref="model_stock_picking"/>
+            <field name="binding_type">report</field>
+        </record>
+</odoo>

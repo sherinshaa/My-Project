@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="vpicktree" model="ir.ui.view">
+        <field name="name">stock.picking.view.tree.material.stock.request</field>
+        <field name="model">stock.picking</field>
+        <field name="inherit_id" ref="stock.vpicktree"/>
+        <field name="arch" type="xml">
+            <field name="origin" position="after">
+                <field name="material_request_id" optional="hide"/>
+                <field name="stock_request_id" optional="hide"/>
+            </field>
+        </field>
+    </record>
+    <record id="view_picking_form" model="ir.ui.view">
+        <field name="name">stock.picking.form.inherit.material.stock.request</field>
+        <field name="model">stock.picking</field>
+        <field name="inherit_id" ref="stock.view_picking_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='location_id']" position="after">
+                <field name="material_request_id" invisible="1"/>
+                <field name="material_transfer" invisible="1"/>
+                <field name="backorder_journal" invisible="1"/>
+                <field name="stock_request_id" invisible="1"/>
+                <field name="stock_request_user_ids" invisible="1" widget="many2many_tags"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

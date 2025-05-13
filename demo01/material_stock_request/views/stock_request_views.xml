@@ -1,0 +1,307 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="stock_request_menu_action"
+            model="ir.actions.act_window">
+        <field name="name">Stock Request</field>
+        <field name="res_model">stock.request</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+<!--tree view-->
+    <record id="stock_request_view_tree" model="ir.ui.view">
+        <field name="name">stock.request.tree</field>
+        <field name="model">stock.request</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name"/>
+                <field name="picking_type_id"/>
+                <field name="date"/>
+                <field name="from_department_id" optional="hide"/>
+                <field name="to_department_id" optional="hide"/>
+                <field name="location_id" optional="hide"/>
+                <field name="location_dest_id" optional="hide"/>
+                <field name="request_by" optional="hide"/>
+                <field name="issued_date" optional="hide"/>
+                <field name="received_date" optional="hide"/>
+                <field name="approved_by" optional="hide"/>
+                <field name="state" decoration-primary="state == 'draft'"
+                       decoration-info="state == 'request_approve'"
+                       decoration-success="state == 'done'"
+                       decoration-danger="state == 'cancel'"
+                       decoration-warning="state == 'approved'"
+                       decoration-bf="state == 'transit'"
+                       widget="badge" optional="show"/>
+            </tree>
+        </field>
+    </record>
+<!--form view-->
+    <record id="stock_request_view_form" model="ir.ui.view">
+        <field name="name">stock.request.form</field>
+        <field name="model">stock.request</field>
+        <field name="arch" type="xml">
+            <form string="Stock Request">
+                <header>
+                    <field name="state" widget="statusbar"
+                           statusbar_visible="draft,transit,done"/>
+                    <button name="action_request_approve"
+                            string="Request Approve"
+                            type="object"
+                            class="btn-primary"
+                            invisible="state != 'draft' or is_form_department == False"/>
+                    <button name="action_approve" string="Approve"
+                            type="object"
+                            class="btn-primary"
+                            invisible="state != 'request_approve' or is_to_department == False or is_approve_visible == False"/>
+                    <button name="button_transfer" string="Issued Product"
+                            type="object"
+                            class="btn-primary"
+                            invisible="state != 'approved' or is_to_department == False or is_issue_store == True or is_product_issue_manager == False"/>
+                    <button name="button_transfer_store_manger"
+                            string="Issued Product"
+                            type="object"
+                            class="btn-primary"
+                            invisible="state != 'approved' or is_issue_office == False or is_product_issue_manager == False"/>
+                    <button name="action_refuse" string="Refuse"
+                            type="object"
+                            class="btn-secondary"
+                            invisible="state != 'request_approve' or is_to_department == False or is_approve_visible == False"/>
+                    <button name="action_draft" string="Reset To Draft"
+                            type="object"
+                            class="btn-secondary"
+                            invisible="state in ('draft','approved','transit','done') or is_any_one == False or is_approve_visible == False"/>
+                    <button name="action_cancel" string="Cancel"
+                            type="object"
+                            class="btn-secondary"
+                            invisible="state in ('transit','done','cancel') or is_form_department == False"/>
+                    <button name="button_receive" string="Stock Receive"
+                            type="object"
+                            class="btn-primary"
+                            invisible="state != 'transit' or is_form_department == False or is_stock_receive_visible == False or is_delivery_pending == True"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_transfer" type="object"
+                                string="Stock Transfers"
+                                class="oe_stat_button" icon="fa-truck"
+                                invisible="state not in ('transit','done')">
+                            <div class="o_field_widget o_stat_info">
+                                <span class="o_stat_value d-flex gap-1" style="color:#993333" invisible="not is_delivery_pending">
+                                    Pending
+                                </span>
+                                <span class="o_stat_text">Stock Transfer</span>
+                            </div>
+                        </button>
+                        <button class="oe_stat_button"
+                                    name="action_backorder"
+                                    type="object" icon="fa-file-o"
+                                    invisible="not backorder_id">
+                                <div class="o_stat_info">
+                                    <span class="o_stat_text"> Source Document
+                                    </span>
+                                </div>
+                            </button>
+                    </div>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" readonly="1"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="picking_type_id"
+                                   readonly="state not in 'draft'"/>
+                            <field name="from_department_id"
+                                   readonly="state not in 'draft'"/>
+                            <field name="from_division_id"/>
+                            <field name="is_issue_store" invisible="1"/>
+                            <field name="is_issue_office" invisible="1"/>
+                            <field name="transfer_ids" invisible="1"
+                                   widget="many2many_tags"/>
+                            <field name="location_dest_id"
+                                   readonly="state not in 'draft'"/>
+                        </group>
+                        <group>
+                            <field name="date"
+                                   readonly="state not in 'draft'"/>
+                            <field name="issued_date"
+                                   readonly="state not in 'approved'"
+                                   invisible="state in ['draft', 'request_approve']"/>
+                            <field name="received_date"
+                                   readonly="state not in 'transit'"
+                                   invisible="state in ['draft', 'request_approve', 'approved']"/>
+                            <field name="backorder_id" invisible="1"/>
+                            <field name="to_department_id"
+                                   readonly="state not in 'draft'"/>
+                            <field name="to_division_id"/>
+                            <field name="location_id"
+                                   readonly="state not in ('draft','request_approve')"/>
+                            <field name="is_to_department" invisible="1"/>
+                            <field name="is_form_department" invisible="1"/>
+                            <field name="request_by"/>
+                            <field name="approved_by"/>
+                            <field name="is_any_one" invisible="1"/>
+                            <field name="is_approve_visible" invisible="1"/>
+                            <field name="is_stock_receive_visible"
+                                   invisible="1"/>
+                            <field name="is_product_issue_manager"
+                                   invisible="1"/>
+                            <field name="is_pos_stock_request" invisible="1"/>
+                            <field name="domain_picking_ids" invisible="1"
+                                   widget="many2many_tags"/>
+                            <field name="is_delivery_pending" invisible="1"/>
+                            <field name="pending_issue" invisible="1"/>
+                            <field name="pending_receipts" invisible="1"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Operations">
+                            <field name="move_ids" >
+                                <tree editable="bottom" delete="0">
+                                    <field name="sequence_number"/>
+                                    <field name="product_id"
+                                           readonly="parent.state not in 'draft'"/>
+                                    <field name="remark"/>
+                                    <field name="available_qty"/>
+                                    <field name="location_available_qty"/>
+                                    <field name="product_uom_category_id"
+                                           column_invisible="1"/>
+                                    <field name="product_uom_qty"
+                                           readonly="parent.state not in 'draft'"/>
+                                    <field name="quantity"
+                                           readonly="parent.state not in ('draft','request_approve') or parent.is_to_department == False or parent.is_approve_visible == False"
+                                           column_invisible="parent.state in 'draft'"
+                                    />
+                                    <field name="issued_qty"
+                                           readonly="parent.state not in ('draft','request_approve', 'approved') or parent.is_issue_office == False or parent.is_product_issue_manager == False"
+                                           column_invisible="parent.state in ('draft','request_approve')"
+                                    />
+                                    <field name="balance_qty" readonly="1"
+                                           decoration-danger="balance_qty > 0"
+                                           optional="hide"/>
+                                    <field name="received_qty"
+                                           readonly="parent.state not in ('draft','request_approve', 'approved','transit') or parent.is_form_department == False or parent.is_stock_receive_visible == False or parent.is_delivery_pending == True or balance_qty == 0"
+                                           column_invisible="parent.state in ('draft','request_approve', 'approved')"
+                                           />
+                                    <field name="returned_qty" optional="hide"/>
+                                    <field name="product_uom"
+                                           readonly="parent.state not in 'draft'"/>
+                                    <field name="already_received_qty"
+                                           string="Actual Received"
+                                           optional="hide"/>
+                                    <button name="unlink_item"
+                                            class="fa fa-trash-o"
+                                    type="object"
+                                            column_invisible="parent.state not in ('draft')"
+                                    />
+                                </tree>
+                            </field>
+                        </page>
+                    <page string="Lot/Serial Number"
+                          invisible="state in ['draft', 'request_approve']">
+                            <field name="lot_ids" >
+                                <tree editable="bottom">
+                                    <field name="stock_request_id"
+                                           column_invisible="1"/>
+                                    <field name="product_id"
+                                           readonly="parent.state not in ('approved')"/>
+                                    <field name="issued_qty"/>
+                                    <field name="qty"
+                                           readonly="parent.state not in ('draft','request_approve', 'approved') or parent.is_issue_office == False or parent.is_product_issue_manager == False"/>
+                                    <field name="lot_ids"
+                                           widget="many2many_tags"
+                                           column_invisible="1"/>
+                                    <field name="available_qty_lot" column_invisible="1"/>
+                                    <field name="lot_qty_pending"
+                                           column_invisible="1"/>
+                                    <field name="is_expired" column_invisible="True"/>
+                                    <button class="fa fa-exclamation-triangle text-danger"
+                                        title="This lot is expired." string="This lot is expired"
+                                        disabled="1"
+                                        invisible="not is_expired"/>
+                                    <field name="lot_id" required="qty"
+                                           readonly="parent.state not in ('draft','request_approve', 'approved') or parent.is_issue_office == False or parent.is_product_issue_manager == False"
+
+                                           options="{'no_quick_create':True,'no_create_edit':True, 'no_create':True}"/>
+                                    <field name="available_qty_lot" column_invisible="1"/>
+                                    <field name="lot_qty_pending"
+                                           column_invisible="1"/>
+                                </tree>
+                            </field>
+                    </page>
+                    </notebook>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+<!--    search view-->
+    <record id="stock_request_view_search" model="ir.ui.view">
+        <field name="name">stock.request.view.search</field>
+        <field name="model">stock.request</field>
+        <field name="arch" type="xml">
+            <search string="Stock Request Search">
+                <field name="name" string="Name"/>
+                <field name="from_department_id" string="From Department"/>
+                <field name="to_department_id" string="To department"/>
+                <field name="request_by" string="Requested By"/>
+                <field name="approved_by" string="Approved By"/>
+                <field name="picking_type_id" string="Operation Type"/>
+                <field name="move_ids" string="Product"
+                       filter_domain="[('move_ids.product_id', 'ilike', self)]"/>
+                <group expand="0" string="Group By">
+                    <filter string="Operation Type" name="operation_type"
+                            context="{'group_by':'picking_type_id'}"/>
+                </group>
+                <group expand="0" string="Group By">
+                    <filter string="From Department" name="from_department"
+                            context="{'group_by':'from_department_id'}"/>
+                    <filter string="To Department" name="to_department"
+                            context="{'group_by':'to_department_id'}"/>
+                </group>
+                <group expand="0" string="Group By">
+                    <filter string="State" name="state"
+                            context="{'group_by':'state'}"/>
+                </group>
+                <group expand="0" string="Group By">
+                    <filter string="Requested By" name="request_by"
+                            context="{'group_by':'request_by'}"/>
+                    <filter string="Approved By" name="approved_by"
+                            context="{'group_by':'approved_by'}"/>
+                </group>
+                <group expand="0" string="Group By">
+                    <filter string="Stock Request-POS" name="pos"
+                            domain="[('is_pos_stock_request', '=', True)]"/>
+                </group>
+                <group expand="0" string="Group By">
+                 <filter string="Back Order" name="backorder"
+                            domain="[('backorder_id', '!=', False)]"/>
+                    <filter string="Pending Issue" name="pending_issue"
+                            domain="[('pending_issue', '!=', False)]"/>
+                    <filter string="Pending Receipts" name="pending_receipts"
+                            domain="[('pending_receipts', '!=', False)]"/>
+                </group>
+                <filter string="Draft" name="draft"
+                        domain="[('state', '=', 'draft')]"/>
+                <filter string="Request Approve" name="request_approve"
+                        domain="[('state', '=', 'request_approved')]"/>
+                <filter string="Approved" name="approved"
+                        domain="[('state', '=', 'approved')]"/>
+                <filter string="Transit" name="transit"
+                        domain="[('state', '=', 'transit')]"/>
+                <filter string="Done" name="done"
+                        domain="[('state', '=', 'done')]"/>
+                <filter string="Cancel" name="cancel"
+                        domain="[('state', '=', 'cancel')]"/>
+                <filter string="Refuse" name="refuse"
+                        domain="[('state', '=', 'refuse')]"/>
+            </search>
+        </field>
+    </record>
+    <menuitem id="menu_bank_guarantee"
+              name="Stock Request"
+              parent="stock.menu_stock_transfers"
+              action="stock_request_menu_action"
+              sequence="45"/>
+</odoo>
